@@ -37,8 +37,6 @@ class App extends Component {
         }
       }
     }
-
-
   }
 
   onUpdateSettings(settings, tag){

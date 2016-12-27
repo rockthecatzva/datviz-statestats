@@ -6,7 +6,8 @@ export default class RadioButtons extends Component {
   render() {
     const { renderData, uxCallback } = this.props
 
-    var onStateClick = function(e, dat){
+    var onStateClick = function(tag, dat){
+      console.log("CLICKKKKK");
       uxCallback(tag, dat)
     }
 
@@ -18,7 +19,7 @@ export default class RadioButtons extends Component {
 
       {(renderData) &&
         renderData.map((v,i)=>{
-          return(<div onClick={()=>{return onStateClick(this, v[1])}} >{v[0]}</div>)
+          return(<div onClick={()=>{return onStateClick(this.props.uxTag, v["apiObj"])}} >{v["label"]}</div>)
           })
         }
 
@@ -29,5 +30,6 @@ export default class RadioButtons extends Component {
 
   RadioButtons.propTypes = {
     renderData: PropTypes.array.isRequired,
-    uxCallback: PropTypes.func.isRequired
+    uxCallback: PropTypes.func.isRequired,
+    uxTag: PropTypes.string.isRequired
   }
