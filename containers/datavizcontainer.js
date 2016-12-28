@@ -62,7 +62,7 @@ export default class DataVizContainer extends Component {
     if(this.props.updateSettingsHandler){
         //initialize the api Settings for each piece of data
         this.props.updateComputedDataHandler({"selectedState": "No state selected"})
-        this.props.updateSettingsHandler({"url": "http://api.census.gov/data/2015/acs1/profile?", "get": "NAME,DP05_0017E", "for":"state:*"}, "Median-Ages")
+        this.props.updateSettingsHandler({"url": "http://api.census.gov/data/2015/acs1/profile?", "get": "NAME,DP05_0017E", "for":"state:*", "dataProcessor": function(v,i){return "trest"}}, "Median-Ages")
         this.props.updateSettingsHandler({"url": "http://api.census.gov/data/2015/acs1/profile?", "get": "NAME,DP03_0062E", "for":null}, "SelectedState-Income")
         this.props.updateSettingsHandler({"url": "http://api.census.gov/data/2015/acs1/profile?", "get": "NAME,DP02_0058E", "for":"state:*"}, "Base-Education")
         this.props.updateSettingsHandler({"url": "http://api.census.gov/data/2015/acs1/profile?", "get": null, "for":"state:*"}, "Selected-Stat")
@@ -71,7 +71,7 @@ export default class DataVizContainer extends Component {
 
   render (){
     if(this.props.apiData){
-      console.log("chec this ", this.props.apiData["Median-Ages"]);
+      //console.log("chec this ", this.props.apiData["Median-Ages"]);
     }
 
     return (

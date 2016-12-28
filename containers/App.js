@@ -70,7 +70,7 @@ class App extends Component {
       }
       else{
         //not an array so just concat it!
-        if(set!="tag"&&set!="url"){
+        if(set!="url"){
           url += "&"+set+"="+settings[set]
         }
       }
