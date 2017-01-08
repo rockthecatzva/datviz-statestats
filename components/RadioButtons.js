@@ -7,7 +7,7 @@ export default class RadioButtons extends Component {
     const { renderData, uxCallback } = this.props
 
     var onStateClick = function(tag, dat){
-      console.log("CLICKKKKK");
+      console.log("CLICKKKKK", tag, dat);
       uxCallback(tag, dat)
     }
 

@@ -55,21 +55,22 @@ export function clearAPIData(treeparent){
   }
 }
 
-export function fetchAPIData(url, treeparent){
+export function fetchAPIData(url, treeparent, processor){
   return dispatch => {
     //fetch url data
     return fetch(url)
       .then(response => response.json())
-      .then(json => dispatch(receiveAPIData(treeparent, json)))
+      .then(json => dispatch(receiveAPIData(treeparent, json, processor)))
     //then hit the callback
   }
 }
 
-function receiveAPIData(treeparent, indata){
+function receiveAPIData(treeparent, indata, processor){
+  //console.log("ready to process data ~~~~~", processor);
   return{
     type: RECEIVE_DATA,
     treeparent,
-    data: csvtojson(indata)
+    data: csvtojson(indata).map(processor)
   }
 }
 

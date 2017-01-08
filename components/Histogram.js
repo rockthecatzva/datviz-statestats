@@ -5,6 +5,7 @@ var d3 = require('d3')
 export default class Histogram extends Component {
 
   updateData(data) {
+    //console.log(data);
     var svg = d3.select(ReactDOM.findDOMNode(this)).select("svg"),
     margin = {top: 20, right: 30, bottom: 30, left: 30},
     width = +svg.attr("width") - margin.left - margin.right,
@@ -51,7 +52,7 @@ export default class Histogram extends Component {
     }
 
     componentWillReceiveProps(nextprop) {
-      console.log("testing incoming data", nextprop)
+      //console.log("testing incoming data", nextprop)
       if(this.props.renderData!=nextprop.renderData){
         this.updateData(nextprop.renderData)
       }
@@ -75,7 +76,7 @@ export default class Histogram extends Component {
 
   render() {
     const {renderData, title} = this.props
-
+console.log("HISTOGRAM", renderData);
     return (
       <div className={"graph-box panel-body"}>
       <h2>{title}</h2>
