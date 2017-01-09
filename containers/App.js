@@ -77,10 +77,11 @@ class App extends Component {
     switch (tag) {
       case "Median-Ages":
         onUpdateSettings({"for": "state:"+uxdat["id"]}, "SelectedState-Income")
-        this.onUpdateComputedData({"selectedState": uxdat["state"]})
+        ///this.onUpdateComputedData({"selectedState": uxdat["state"]})
         break;
       case "StatSelected":
         this.onUpdateSettings(uxdat, "Selected-Stat")
+        console.log("STAT SELECTED!!!!", uxdat);
         break;
     }
   }
@@ -112,21 +113,31 @@ class App extends Component {
   render() {
     const {apiData, apiSettings, computedData } = this.props
 
+    const radOptions = [{"label": "Edu=High School", "apiObj": {"get": "NAME,DP02_0061E,DP02_0058E", "processor": (v,i)=>{return {"state": v["NAME"], "value": Math.round((parseInt(v["DP02_0061E"])/parseInt(v["DP02_0058E"]))*100)}}}},
+                        {"label": "Edu=Bachlors", "apiObj": {"get":"NAME,DP02_0064E,DP02_0058E", "processor": (v,i)=>{return {"state": v["NAME"], "value": Math.round((parseInt(v["DP02_0064E"])/parseInt(v["DP02_0058E"]))*100)}}}},
+                        {"label": "Unmarried Births (per 1k)", "apiObj": {"get":"NAME,DP02_0038E", "processor": (v,i)=>{return {"state": v["NAME"], "value": parseInt(v["DP02_0038E"])}}}},
+                        {"label": "%White", "apiObj": {"get":"NAME,DP05_0032E,DP05_0028E", "processor": (v,i)=>{return {"state": v["NAME"], "value": Math.round((parseInt(v["DP05_0032E"])/parseInt(v["DP05_0028E"]))*100)}}}},
+                        {"label": "%Hispanic", "apiObj": {"get":"NAME,DP05_0066E,DP05_0065E", "processor": (v,i)=>{return {"state": v["NAME"], "value": Math.round((parseInt(v["DP05_0066E"])/parseInt(v["DP05_0065E"]))*100)}}}},
+                        {"label": "% No Health Insurace", "apiObj": {"get":"NAME,DP03_0099E,DP03_0095E", "processor": (v,i)=>{return {"state": v["NAME"], "value": Math.round((parseInt(v["DP03_0099E"])/parseInt(v["DP03_0095E"]))*100)}}}},
+                        {"label": "Female:Male Earnings", "apiObj": {"get":"NAME,DP03_0094E,DP03_0093E", "processor": (v,i)=>{return {"state": v["NAME"], "value": ((parseInt(v["DP03_0094E"])/parseInt(v["DP03_0093E"]))).toFixed(2)}}}},
+
+                      ]
+
     return (
       <div>
       <div>
         <h1>Generic DataViz Container</h1>
 
-        {(computedData) &&
-          <TitleBox label={apiData["selectedState"]} />
+
+        <TitleBox label={apiData["selectedState"]} />
+
+        <RadioButtons uxTag={"StatSelected"} uxCallback={this.onUxEvent} renderData={radOptions} />
+        {(apiData["Selected-Stat"]) &&
+          <div>
+            <Histogram renderData={apiData["Selected-Stat"].map((v)=>{return v["value"]})} width={300} height={300} title={"NEEDS TO BE DYNAMIC!!"} />
+            <SimpleList renderData={apiData["Selected-Stat"]} columnList={["state", "value"]} uxCallback={this.onUxEvent} dataTag={""} />
+          </div>
         }
-
-        <RadioButtons uxTag={"StatSelected"} uxCallback={this.onUxEvent} renderData={[{"label": "Edu=High School", "apiObj": {"get": "NAME,DP02_0061E,DP02_0058E", "processor": (v,i)=>{return [v["NAME"], Math.round((parseInt(v["DP02_0061E"])/parseInt(v["DP02_0058E"]))*100)]}}}, {"label": "Edu=Bachlors", "apiObj": {"get":"DP02_0064E"}}]} />
-
-
-          <Histogram renderData={apiData["Median-Ages"]} width={300} height={300} title={"Median Ages"} />
-
-
 
       </div>
       </div>

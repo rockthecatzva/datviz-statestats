@@ -5,7 +5,7 @@ var d3 = require('d3')
 export default class Histogram extends Component {
 
   updateData(data) {
-    //console.log(data);
+    console.log(data);
     var svg = d3.select(ReactDOM.findDOMNode(this)).select("svg"),
     margin = {top: 20, right: 30, bottom: 30, left: 30},
     width = +svg.attr("width") - margin.left - margin.right,
@@ -52,10 +52,10 @@ export default class Histogram extends Component {
     }
 
     componentWillReceiveProps(nextprop) {
-      //console.log("testing incoming data", nextprop)
-      if(this.props.renderData!=nextprop.renderData){
+    console.log("testing incoming data", nextprop)
+    //  if(this.props.renderData!=nextprop.renderData){
         this.updateData(nextprop.renderData)
-      }
+      ///}
 
       /*
       //this will only handle 2 lines, not 1 and not 2+ but 2 - need to rethink this
@@ -66,17 +66,19 @@ export default class Histogram extends Component {
 
 
   componentDidMount() {
-    var el = ReactDOM.findDOMNode(this)
-    var formatDate = d3.timeFormat("%d-%b-%y")
-    var svg = d3.select(el).append("svg")
-      .attr("width", this.props.width)
-      .attr("height", this.props.height)
+    console.log("HISTo MOUNTED");
+    //var el = ReactDOM.findDOMNode(this)
+    //var formatDate = d3.timeFormat("%d-%b-%y")
+    //var svg = d3.select(el).append("svg")
+      //.attr("width", this.props.width)
+      //.attr("height", this.props.height)
   }
 
 
   render() {
     const {renderData, title} = this.props
-console.log("HISTOGRAM", renderData);
+    console.log("RENDERING - HISTOGRAM", renderData);
+
     return (
       <div className={"graph-box panel-body"}>
       <h2>{title}</h2>
