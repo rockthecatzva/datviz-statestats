@@ -19,10 +19,10 @@ class App extends Component {
   componentDidMount(){
     console.log("MOUNTED!!!");
     this.onUpdateComputedData({"selectedState": "No state selected"})
-    this.onUpdateSettings({"url": "http://api.census.gov/data/2015/acs1/profile?", "get": "NAME,DP05_0017E", "for":"state:*", "processor": function(v,i){ return parseInt(v["DP05_0017E"])}}, "Median-Ages")
-    this.onUpdateSettings({"url": "http://api.census.gov/data/2015/acs1/profile?", "get": "NAME,DP03_0062E", "for":null, "processor": function(v,i){return "trest"}}, "SelectedState-Income")
-    this.onUpdateSettings({"url": "http://api.census.gov/data/2015/acs1/profile?", "get": "NAME,DP02_0058E", "for":"state:*", "processor": function(v,i){return "trest"}}, "Base-Education")
-    this.onUpdateSettings({"url": "http://api.census.gov/data/2015/acs1/profile?", "get": null, "for":"state:*", "processor": function(v,i){return "trest"}}, "Selected-Stat")
+    //this.onUpdateSettings({"url": "http://api.census.gov/data/2015/acs1/profile?", "get": "NAME,DP05_0017E", "for":"state:*", "processor": function(v,i){ return parseInt(v["DP05_0017E"])}}, "Median-Ages")
+    //this.onUpdateSettings({"url": "http://api.census.gov/data/2015/acs1/profile?", "get": "NAME,DP03_0062E", "for":null, "processor": function(v,i){return "trest"}}, "SelectedState-Income")
+    //this.onUpdateSettings({"url": "http://api.census.gov/data/2015/acs1/profile?", "get": "NAME,DP02_0058E", "for":"state:*", "processor": function(v,i){return "trest"}}, "Base-Education")
+    this.onUpdateSettings({"url": "http://api.census.gov/data/2015/acs1/profile?", "get": null, "for":"state:*", "processor": null}, "Selected-Stat")
 
   }
 
@@ -117,10 +117,12 @@ class App extends Component {
                         {"label": "Edu=Bachlors", "apiObj": {"get":"NAME,DP02_0064E,DP02_0058E", "processor": (v,i)=>{return {"state": v["NAME"], "value": Math.round((parseInt(v["DP02_0064E"])/parseInt(v["DP02_0058E"]))*100)}}}},
                         {"label": "Unmarried Births (per 1k)", "apiObj": {"get":"NAME,DP02_0038E", "processor": (v,i)=>{return {"state": v["NAME"], "value": parseInt(v["DP02_0038E"])}}}},
                         {"label": "%White", "apiObj": {"get":"NAME,DP05_0032E,DP05_0028E", "processor": (v,i)=>{return {"state": v["NAME"], "value": Math.round((parseInt(v["DP05_0032E"])/parseInt(v["DP05_0028E"]))*100)}}}},
+                        {"label": "%Black", "apiObj": {"get":"NAME,DP05_0033E,DP05_0028E", "processor": (v,i)=>{return {"state": v["NAME"], "value": Math.round((parseInt(v["DP05_0033E"])/parseInt(v["DP05_0028E"]))*100)}}}},
                         {"label": "%Hispanic", "apiObj": {"get":"NAME,DP05_0066E,DP05_0065E", "processor": (v,i)=>{return {"state": v["NAME"], "value": Math.round((parseInt(v["DP05_0066E"])/parseInt(v["DP05_0065E"]))*100)}}}},
                         {"label": "% No Health Insurace", "apiObj": {"get":"NAME,DP03_0099E,DP03_0095E", "processor": (v,i)=>{return {"state": v["NAME"], "value": Math.round((parseInt(v["DP03_0099E"])/parseInt(v["DP03_0095E"]))*100)}}}},
-                        {"label": "Female:Male Earnings", "apiObj": {"get":"NAME,DP03_0094E,DP03_0093E", "processor": (v,i)=>{return {"state": v["NAME"], "value": ((parseInt(v["DP03_0094E"])/parseInt(v["DP03_0093E"]))).toFixed(2)}}}},
-
+                        //{"label": "Female:Male Earnings", "apiObj": {"get":"NAME,DP03_0094E,DP03_0093E", "processor": (v,i)=>{return {"state": v["NAME"], "value": ((parseInt(v["DP03_0094E"])/parseInt(v["DP03_0093E"]))).toFixed(2)}}}},
+                        {"label": "Median Age", "apiObj": {"get":"NAME,DP05_0017E", "processor": (v,i)=>{return {"state": v["NAME"], "value": parseInt(v["DP05_0017E"])}}}},
+                        {"label": "Median HH Income", "apiObj": {"get":"NAME,DP03_0062E", "processor": (v,i)=>{return {"state": v["NAME"], "value": parseInt(v["DP03_0062E"])}}}},
                       ]
 
     return (
@@ -134,7 +136,7 @@ class App extends Component {
         <RadioButtons uxTag={"StatSelected"} uxCallback={this.onUxEvent} renderData={radOptions} />
         {(apiData["Selected-Stat"]) &&
           <div>
-            <Histogram renderData={apiData["Selected-Stat"].map((v)=>{return v["value"]})} width={300} height={300} title={"NEEDS TO BE DYNAMIC!!"} />
+            <Histogram renderData={apiData["Selected-Stat"].map((v)=>{return v["value"]})} width={300} height={300} title={"Histogram Title Here"} />
             <SimpleList renderData={apiData["Selected-Stat"]} columnList={["state", "value"]} uxCallback={this.onUxEvent} dataTag={""} />
           </div>
         }

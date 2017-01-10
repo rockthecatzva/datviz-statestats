@@ -15,7 +15,7 @@ export default class Histogram extends Component {
 
     var x = d3.scaleLinear()
       .domain([d3.min(data), d3.max(data)])
-      .range([0, width])
+      .range([10, width])
       .interpolate(d3.interpolateRound)
 
     var bins = d3.histogram()
@@ -25,7 +25,7 @@ export default class Histogram extends Component {
 
     var y = d3.scaleLinear()
       .domain([0, d3.max(bins, function(d) { return d.length; })])
-      .range([height, 0]);
+      .range([height, 15]);
 
     var bar = svg.selectAll(".bar")
       .data(bins)
@@ -52,7 +52,7 @@ export default class Histogram extends Component {
     }
 
     componentWillReceiveProps(nextprop) {
-    console.log("testing incoming data", nextprop)
+      console.log("GETTING PROPS YO", nextprop)
     //  if(this.props.renderData!=nextprop.renderData){
         this.updateData(nextprop.renderData)
       ///}
@@ -66,18 +66,21 @@ export default class Histogram extends Component {
 
 
   componentDidMount() {
-    console.log("HISTo MOUNTED");
-    //var el = ReactDOM.findDOMNode(this)
-    //var formatDate = d3.timeFormat("%d-%b-%y")
-    //var svg = d3.select(el).append("svg")
-      //.attr("width", this.props.width)
-      //.attr("height", this.props.height)
+    var el = ReactDOM.findDOMNode(this)
+    var formatDate = d3.timeFormat("%d-%b-%y")
+    var svg = d3.select(el).append("svg")
+      .attr("width", this.props.width)
+      .attr("height", this.props.height)
+
+      if(this.props.renderData){
+        this.updateData(this.props.renderData)
+      }
   }
 
 
   render() {
     const {renderData, title} = this.props
-    console.log("RENDERING - HISTOGRAM", renderData);
+
 
     return (
       <div className={"graph-box panel-body"}>
