@@ -29,6 +29,7 @@
     "babel-polyfill": "^6.3.14",
     "babelify": "^7.3.0",
     "browserify": "^13.1.0",
+    "d3-geo": "^1.4.0",
     "gulp": "^3.9.1",
     "halogen": "^0.2.0",
     "isomorphic-fetch": "^2.1.1",
@@ -38,6 +39,7 @@
     "redux": "^3.2.1",
     "redux-logger": "^2.4.0",
     "redux-thunk": "^1.0.3",
+    "topojson": "^2.2.0",
     "vinyl-source-stream": "^1.1.0"
   },
   "devDependencies": {

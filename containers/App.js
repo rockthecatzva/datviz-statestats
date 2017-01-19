@@ -7,6 +7,7 @@ import InfoBox from '../components/InfoBox'
 import TitleBox from '../components/TitleBox'
 import Histogram from '../components/Histogram'
 import RadioButtons from '../components/RadioButtons'
+import MapUSA from '../components/MapUSA'
 
 class App extends Component {
   constructor(props) {
@@ -130,6 +131,7 @@ class App extends Component {
       <div>
         <h1>Generic DataViz Container</h1>
 
+        <MapUSA height={300} width={1000} />
 
         <TitleBox label={apiData["selectedState"]} />
 
