@@ -83,7 +83,7 @@ export default class Histogram extends Component {
 
 
     return (
-      <div className={"graph-box panel-body"}>
+      <div className="col-sm-4">
       <h2>{title}</h2>
       {(!renderData) &&
         <div className="loading">Loading&#8230;</div>

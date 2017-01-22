@@ -2,13 +2,19 @@
 <html>
   <head>
     <title>Redux async example</title>
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script type="text/javascript" src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
     <style>
-      .simple-list, .info-box{
-        width: 300px;
-        //height: 300px;
-        overflow: scroll;
-        border: solid 1px;
-        margin: 5px;
+      .simple-list{
+        -moz-column-count: 2;
+    -moz-column-gap: 8px;
+    -webkit-column-count: 2;
+    -webkit-column-gap: 8px;
+    column-count: 2;
+    column-gap: 8px;
       }
       .info-box{
         height: 100px;
@@ -19,9 +25,6 @@
         stroke: #fff;
       }
 
-      .states:hover{
-        fill: red;
-      }
 
     </style>
     <link rel="stylesheet" type="text/css" href="css/loading-spinner.css" >

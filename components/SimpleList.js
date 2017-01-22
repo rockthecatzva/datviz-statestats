@@ -13,8 +13,18 @@ export default class SimpleList extends Component {
       uxCallback(tag, dat)
     }
 
+    let sorteddata = renderData.sort((a,b)=>{
+      //console.log(a,b);
+      if(a["value"]<b["value"]){
+        return 1
+      }
+
+      return -1
+
+    })
+
     return (
-      <div className={"simple-list"}>
+      <div className={"col-sm-10 simple-list"}>
       {(!renderData) &&
         <div className="loading">Loading&#8230;</div>
       }

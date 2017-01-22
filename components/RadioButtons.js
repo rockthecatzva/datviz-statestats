@@ -12,18 +12,18 @@ export default class RadioButtons extends Component {
     }
 
     return (
-      <div className={"simple-list"}>
+      <ul className={"col-sm-12 simple-list"}>
       {(!renderData) &&
         <div className="loading">Loading&#8230;</div>
       }
 
       {(renderData) &&
         renderData.map((v,i)=>{
-          return(<div onClick={()=>{return onStateClick(this.props.uxTag, v["apiObj"])}} >{v["label"]}</div>)
+          return(<li onClick={()=>{return onStateClick(this.props.uxTag, v["apiObj"])}} >{v["label"]}</li>)
           })
         }
 
-        </div>
+        </ul>
       )
     }
   }

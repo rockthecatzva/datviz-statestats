@@ -114,32 +114,39 @@ class App extends Component {
   render() {
     const {apiData, apiSettings, computedData } = this.props
 
-    const radOptions = [{"label": "Edu=High School", "apiObj": {"get": "NAME,DP02_0061E,DP02_0058E", "processor": (v,i)=>{return {"state": v["NAME"], "value": Math.round((parseInt(v["DP02_0061E"])/parseInt(v["DP02_0058E"]))*100)}}}},
-                        {"label": "Edu=Bachlors", "apiObj": {"get":"NAME,DP02_0064E,DP02_0058E", "processor": (v,i)=>{return {"state": v["NAME"], "value": Math.round((parseInt(v["DP02_0064E"])/parseInt(v["DP02_0058E"]))*100)}}}},
-                        {"label": "Unmarried Births (per 1k)", "apiObj": {"get":"NAME,DP02_0038E", "processor": (v,i)=>{return {"state": v["NAME"], "value": parseInt(v["DP02_0038E"])}}}},
-                        {"label": "%White", "apiObj": {"get":"NAME,DP05_0032E,DP05_0028E", "processor": (v,i)=>{return {"state": v["NAME"], "value": Math.round((parseInt(v["DP05_0032E"])/parseInt(v["DP05_0028E"]))*100)}}}},
-                        {"label": "%Black", "apiObj": {"get":"NAME,DP05_0033E,DP05_0028E", "processor": (v,i)=>{return {"state": v["NAME"], "value": Math.round((parseInt(v["DP05_0033E"])/parseInt(v["DP05_0028E"]))*100)}}}},
-                        {"label": "%Hispanic", "apiObj": {"get":"NAME,DP05_0066E,DP05_0065E", "processor": (v,i)=>{return {"state": v["NAME"], "value": Math.round((parseInt(v["DP05_0066E"])/parseInt(v["DP05_0065E"]))*100)}}}},
-                        {"label": "% No Health Insurace", "apiObj": {"get":"NAME,DP03_0099E,DP03_0095E", "processor": (v,i)=>{return {"state": v["NAME"], "value": Math.round((parseInt(v["DP03_0099E"])/parseInt(v["DP03_0095E"]))*100)}}}},
+    const radOptions = [{"label": "Edu=High School", "apiObj": {"get": "NAME,DP02_0061E,DP02_0058E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.round((parseInt(v["DP02_0061E"])/parseInt(v["DP02_0058E"]))*100)}}}},
+                        {"label": "Edu=Bachlors", "apiObj": {"get":"NAME,DP02_0064E,DP02_0058E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.round((parseInt(v["DP02_0064E"])/parseInt(v["DP02_0058E"]))*100)}}}},
+                        {"label": "Unmarried Births (per 1k)", "apiObj": {"get":"NAME,DP02_0038E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": parseInt(v["DP02_0038E"])}}}},
+                        {"label": "%White", "apiObj": {"get":"NAME,DP05_0032E,DP05_0028E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.round((parseInt(v["DP05_0032E"])/parseInt(v["DP05_0028E"]))*100)}}}},
+                        {"label": "%Black", "apiObj": {"get":"NAME,DP05_0033E,DP05_0028E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.round((parseInt(v["DP05_0033E"])/parseInt(v["DP05_0028E"]))*100)}}}},
+                        {"label": "%Hispanic", "apiObj": {"get":"NAME,DP05_0066E,DP05_0065E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.round((parseInt(v["DP05_0066E"])/parseInt(v["DP05_0065E"]))*100)}}}},
+                        {"label": "% No Health Insurace", "apiObj": {"get":"NAME,DP03_0099E,DP03_0095E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.round((parseInt(v["DP03_0099E"])/parseInt(v["DP03_0095E"]))*100)}}}},
                         //{"label": "Female:Male Earnings", "apiObj": {"get":"NAME,DP03_0094E,DP03_0093E", "processor": (v,i)=>{return {"state": v["NAME"], "value": ((parseInt(v["DP03_0094E"])/parseInt(v["DP03_0093E"]))).toFixed(2)}}}},
-                        {"label": "Median Age", "apiObj": {"get":"NAME,DP05_0017E", "processor": (v,i)=>{return {"state": v["NAME"], "value": parseInt(v["DP05_0017E"])}}}},
-                        {"label": "Median HH Income", "apiObj": {"get":"NAME,DP03_0062E", "processor": (v,i)=>{return {"state": v["NAME"], "value": parseInt(v["DP03_0062E"])}}}},
+                        {"label": "Median Age", "apiObj": {"get":"NAME,DP05_0017E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": parseInt(v["DP05_0017E"])}}}},
+                        {"label": "Median HH Income", "apiObj": {"get":"NAME,DP03_0062E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.trunc(parseInt(v["DP03_0062E"])/1000)}}}},
                       ]
 
     return (
       <div>
-      <div>
+      <div className="container">
         <h1>Generic DataViz Container</h1>
-
-        <MapUSA height={300} width={1000} />
 
         <TitleBox label={apiData["selectedState"]} />
 
-        <RadioButtons uxTag={"StatSelected"} uxCallback={this.onUxEvent} renderData={radOptions} />
+        <div className="row">
+          <RadioButtons uxTag={"StatSelected"} uxCallback={this.onUxEvent} renderData={radOptions} />
+        </div>
+
+
         {(apiData["Selected-Stat"]) &&
           <div>
-            <Histogram renderData={apiData["Selected-Stat"].map((v)=>{return v["value"]})} width={300} height={300} title={"Histogram Title Here"} />
-            <SimpleList renderData={apiData["Selected-Stat"]} columnList={["state", "value"]} uxCallback={this.onUxEvent} dataTag={""} />
+            <div className="row">
+              <MapUSA height={300} width={500} renderData={apiData["Selected-Stat"]} />
+              <Histogram renderData={apiData["Selected-Stat"].map((v)=>{return v["value"]})} width={300} height={300} title={"Histogram Title Here"} />
+            </div>
+            <div className="row">
+              <SimpleList renderData={apiData["Selected-Stat"]} columnList={["state", "value"]} uxCallback={this.onUxEvent} dataTag={""} />
+            </div>
           </div>
         }
 
