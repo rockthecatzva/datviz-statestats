@@ -4,6 +4,14 @@ var d3 = require('d3')
 var topojson = require('topojson')
 
 export default class MapUSA extends Component {
+  constructor(props){
+    super(props)
+    this.callUx = this.callUx.bind(this)
+  }
+
+  callUx(tag, data){
+    this.props.uxCallback(tag, data)
+  }
 
   updateData(data) {
     console.log("UpdateData");
@@ -39,6 +47,14 @@ export default class MapUSA extends Component {
 
       console.log("this is max    ", max_val);
 
+      var tooltip = svg.selectAll("div")
+      	.style("position", "absolute")
+      	.style("z-index", "10")
+      	.style("visibility", "hidden")
+      	.text("a simple tooltip");
+
+
+
       var s = svg.selectAll("path")
         .data(t)
         .enter()
@@ -48,7 +64,12 @@ export default class MapUSA extends Component {
         .style('fill', function(d) {
           return color_scale(d['value']);
         })
-        .on("click", (e)=>{console.log(e);});
+        .on("click", (e)=>{
+          console.log("State click")
+          this.callUx("map-click", {"state": e.state, "id": e.id, "value": e.value})
+          par.props.onUxEvent()
+          return tooltip.style("visibility", "visible");
+        });
     });
   }
 
@@ -92,5 +113,6 @@ MapUSA.propTypes = {
   renderData: PropTypes.array.isRequired,
   height: PropTypes.number.isRequired,
   width: PropTypes.number.isRequired,
+  uxCallback: PropTypes.func.isRequired
   //title: PropTypes.string.isRequired
 }

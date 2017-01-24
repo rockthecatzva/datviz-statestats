@@ -82,7 +82,10 @@ class App extends Component {
         break;
       case "StatSelected":
         this.onUpdateSettings(uxdat, "Selected-Stat")
-        console.log("STAT SELECTED!!!!", uxdat);
+        //console.log("STAT SELECTED!!!!", uxdat);
+        break;
+      case "map-click":
+        
         break;
     }
   }
@@ -141,7 +144,7 @@ class App extends Component {
         {(apiData["Selected-Stat"]) &&
           <div>
             <div className="row">
-              <MapUSA height={300} width={500} renderData={apiData["Selected-Stat"]} />
+              <MapUSA height={300} width={500} renderData={apiData["Selected-Stat"]} uxCallback={this.onUxEvent} />
               <Histogram renderData={apiData["Selected-Stat"].map((v)=>{return v["value"]})} width={300} height={300} title={"Histogram Title Here"} />
             </div>
             <div className="row">
