@@ -4,8 +4,9 @@ var d3 = require('d3')
 
 export default class Histogram extends Component {
 
-  updateData(data) {
-    console.log(data);
+  updateData(data, highlight) {
+    console.log(data, highlight);
+    //const {highLightValue} = this.props
     var svg = d3.select(ReactDOM.findDOMNode(this)).select("svg"),
     margin = {top: 20, right: 30, bottom: 30, left: 30},
     width = +svg.attr("width") - margin.left - margin.right,
@@ -27,16 +28,28 @@ export default class Histogram extends Component {
       .domain([0, d3.max(bins, function(d) { return d.length; })])
       .range([height, 15]);
 
+    svg.selectAll(".bar").remove()
     var bar = svg.selectAll(".bar")
       .data(bins)
       .enter().append("g")
       .attr("class", "bar")
       .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
 
+    console.log("BUILDING RECT", highlight);
     bar.append("rect")
       .attr("x", 1)
       .attr("width", x(bins[0].x1) - x(bins[0].x0) - 1)
-      .attr("height", function(d) { return height - y(d.length); });
+      .attr("height", function(d) { return height - y(d.length); })
+      .attr("class", (d)=>{
+        console.log(highlight, d.x0, d.x1);
+        if(highlight){
+          if((highlight>=d.x0)&&(highlight<=d.x1)){
+            console.log("FOUND IT");
+            return "highlight"
+          }
+        }
+        return "normal";
+        });
 
     bar.append("text")
       .attr("y", "-0.25em")
@@ -52,9 +65,15 @@ export default class Histogram extends Component {
     }
 
     componentWillReceiveProps(nextprop) {
-      console.log("GETTING PROPS YO", nextprop)
+
     //  if(this.props.renderData!=nextprop.renderData){
-        this.updateData(nextprop.renderData)
+    console.log("GETTING PROPS YO", nextprop)
+    if((nextprop.renderData)&&(nextprop.highLightValue)){
+      console.log("inside yo!!!!!", nextprop)
+      this.updateData(nextprop.renderData, nextprop.highLightValue)
+    }
+
+
       ///}
 
       /*
@@ -97,5 +116,6 @@ Histogram.propTypes = {
   renderData: PropTypes.array.isRequired,
   height: PropTypes.number.isRequired,
   width: PropTypes.number.isRequired,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
+  highLightValue: PropTypes.number.isRequired
 }

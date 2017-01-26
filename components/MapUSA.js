@@ -6,18 +6,14 @@ var topojson = require('topojson')
 export default class MapUSA extends Component {
   constructor(props){
     super(props)
-    this.callUx = this.callUx.bind(this)
-  }
-
-  callUx(tag, data){
-    this.props.uxCallback(tag, data)
+    this.updateData = this.updateData.bind(this)
   }
 
   updateData(data) {
-    console.log("UpdateData");
-    var projection = d3.geoAlbersUsa().scale(700).translate([this.props.width / 2, this.props.height / 2]);;
-    var path = d3.geoPath()
-        .projection(projection);
+    const {uxCallback} = this.props
+
+    var projection = d3.geoAlbersUsa().scale(700).translate([this.props.width / 2, this.props.height / 2])
+    var path = d3.geoPath().projection(projection);
 
     var svg = d3.select(ReactDOM.findDOMNode(this)).select("svg")
         .attr("width", this.props.width)
@@ -40,12 +36,9 @@ export default class MapUSA extends Component {
 
       d.features = t
 
-
       let max_val = d3.max(d.features, (d)=>{return d['value']})
       let min_val = d3.min(d.features, (d)=>{return d['value']})
       var color_scale = d3.scaleLinear().domain([min_val, max_val]).range(['white', 'red']);
-
-      console.log("this is max    ", max_val);
 
       var tooltip = svg.selectAll("div")
       	.style("position", "absolute")
@@ -53,7 +46,9 @@ export default class MapUSA extends Component {
       	.style("visibility", "hidden")
       	.text("a simple tooltip");
 
-
+      var callUx = function(tag, data){
+          uxCallback(tag, data)
+        }
 
       var s = svg.selectAll("path")
         .data(t)
@@ -65,16 +60,13 @@ export default class MapUSA extends Component {
           return color_scale(d['value']);
         })
         .on("click", (e)=>{
-          console.log("State click")
-          this.callUx("map-click", {"state": e.state, "id": e.id, "value": e.value})
-          par.props.onUxEvent()
+          callUx("map-click", {"name": e.name, "id": e.id, "value": e.value})
           return tooltip.style("visibility", "visible");
         });
     });
   }
 
   componentWillReceiveProps(nextprop) {
-      console.log("GETTING PROPS YO", nextprop)
       if(nextprop.renderData){
         this.updateData(nextprop.renderData)
       }
@@ -96,8 +88,6 @@ export default class MapUSA extends Component {
   render() {
     const {renderData, title} = this.props
 
-    console.log("rendering ", this.props.renderData);
-
     return (
       <div className="col-sm-6">
       <h2>{title}</h2>
@@ -114,5 +104,4 @@ MapUSA.propTypes = {
   height: PropTypes.number.isRequired,
   width: PropTypes.number.isRequired,
   uxCallback: PropTypes.func.isRequired
-  //title: PropTypes.string.isRequired
 }

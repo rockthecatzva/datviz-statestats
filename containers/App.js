@@ -20,6 +20,7 @@ class App extends Component {
   componentDidMount(){
     console.log("MOUNTED!!!");
     this.onUpdateComputedData({"selectedState": "No state selected"})
+    this.onUpdateComputedData({"selectedValue": null})
     //this.onUpdateSettings({"url": "http://api.census.gov/data/2015/acs1/profile?", "get": "NAME,DP05_0017E", "for":"state:*", "processor": function(v,i){ return parseInt(v["DP05_0017E"])}}, "Median-Ages")
     //this.onUpdateSettings({"url": "http://api.census.gov/data/2015/acs1/profile?", "get": "NAME,DP03_0062E", "for":null, "processor": function(v,i){return "trest"}}, "SelectedState-Income")
     //this.onUpdateSettings({"url": "http://api.census.gov/data/2015/acs1/profile?", "get": "NAME,DP02_0058E", "for":"state:*", "processor": function(v,i){return "trest"}}, "Base-Education")
@@ -85,7 +86,8 @@ class App extends Component {
         //console.log("STAT SELECTED!!!!", uxdat);
         break;
       case "map-click":
-        
+        //tell the histogram to highlight XXXXXX
+        this.onUpdateComputedData({"selectedValue": uxdat["value"]})
         break;
     }
   }
@@ -145,7 +147,7 @@ class App extends Component {
           <div>
             <div className="row">
               <MapUSA height={300} width={500} renderData={apiData["Selected-Stat"]} uxCallback={this.onUxEvent} />
-              <Histogram renderData={apiData["Selected-Stat"].map((v)=>{return v["value"]})} width={300} height={300} title={"Histogram Title Here"} />
+              <Histogram renderData={apiData["Selected-Stat"].map((v)=>{return v["value"]})} width={300} height={300} title={"Histogram Title Here"} highLightValue={computedData["selectedValue"]} />
             </div>
             <div className="row">
               <SimpleList renderData={apiData["Selected-Stat"]} columnList={["state", "value"]} uxCallback={this.onUxEvent} dataTag={""} />
