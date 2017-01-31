@@ -21,6 +21,8 @@ class App extends Component {
     console.log("MOUNTED!!!");
     this.onUpdateComputedData({"selectedState": "No state selected"})
     this.onUpdateComputedData({"selectedValue": null})
+    this.onUpdateComputedData({"selectedRange": null})
+
     //this.onUpdateSettings({"url": "http://api.census.gov/data/2015/acs1/profile?", "get": "NAME,DP05_0017E", "for":"state:*", "processor": function(v,i){ return parseInt(v["DP05_0017E"])}}, "Median-Ages")
     //this.onUpdateSettings({"url": "http://api.census.gov/data/2015/acs1/profile?", "get": "NAME,DP03_0062E", "for":null, "processor": function(v,i){return "trest"}}, "SelectedState-Income")
     //this.onUpdateSettings({"url": "http://api.census.gov/data/2015/acs1/profile?", "get": "NAME,DP02_0058E", "for":"state:*", "processor": function(v,i){return "trest"}}, "Base-Education")
@@ -77,24 +79,26 @@ class App extends Component {
     //PROCESS A UX EVENT - from a child component
     console.log("ux event ", tag, uxdat);
     switch (tag) {
-      case "Median-Ages":
-        onUpdateSettings({"for": "state:"+uxdat["id"]}, "SelectedState-Income")
-        ///this.onUpdateComputedData({"selectedState": uxdat["state"]})
-        break;
       case "StatSelected":
+        this.onUpdateComputedData({"selectedRange": null})
+        this.onUpdateComputedData({"selectedValue": null})
         this.onUpdateSettings(uxdat, "Selected-Stat")
         //console.log("STAT SELECTED!!!!", uxdat);
         break;
       case "map-click":
         //tell the histogram to highlight XXXXXX
+        this.onUpdateComputedData({"selectedRange": null})
         this.onUpdateComputedData({"selectedValue": uxdat["value"]})
         break;
+      case "histogram-click":
+        //tell the map to highlight certain states
+        this.onUpdateComputedData({"selectedValue": null})
+        this.onUpdateComputedData({"selectedRange": uxdat["range"]})
     }
   }
 
   //the new URL needs to be created after the settings have been updated
   buildURL(settings){
-    //const baseurl = "http://localhost:8888/api-tvratings-phpslim/"
     let baseurl = "";
     var url = baseurl + settings["url"]
 
@@ -126,7 +130,6 @@ class App extends Component {
                         {"label": "%Black", "apiObj": {"get":"NAME,DP05_0033E,DP05_0028E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.round((parseInt(v["DP05_0033E"])/parseInt(v["DP05_0028E"]))*100)}}}},
                         {"label": "%Hispanic", "apiObj": {"get":"NAME,DP05_0066E,DP05_0065E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.round((parseInt(v["DP05_0066E"])/parseInt(v["DP05_0065E"]))*100)}}}},
                         {"label": "% No Health Insurace", "apiObj": {"get":"NAME,DP03_0099E,DP03_0095E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.round((parseInt(v["DP03_0099E"])/parseInt(v["DP03_0095E"]))*100)}}}},
-                        //{"label": "Female:Male Earnings", "apiObj": {"get":"NAME,DP03_0094E,DP03_0093E", "processor": (v,i)=>{return {"state": v["NAME"], "value": ((parseInt(v["DP03_0094E"])/parseInt(v["DP03_0093E"]))).toFixed(2)}}}},
                         {"label": "Median Age", "apiObj": {"get":"NAME,DP05_0017E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": parseInt(v["DP05_0017E"])}}}},
                         {"label": "Median HH Income", "apiObj": {"get":"NAME,DP03_0062E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.trunc(parseInt(v["DP03_0062E"])/1000)}}}},
                       ]
@@ -146,8 +149,8 @@ class App extends Component {
         {(apiData["Selected-Stat"]) &&
           <div>
             <div className="row">
-              <MapUSA height={300} width={500} renderData={apiData["Selected-Stat"]} uxCallback={this.onUxEvent} />
-              <Histogram renderData={apiData["Selected-Stat"].map((v)=>{return v["value"]})} width={300} height={300} title={"Histogram Title Here"} highLightValue={computedData["selectedValue"]} />
+              <MapUSA height={300} width={500} renderData={apiData["Selected-Stat"]} uxCallback={this.onUxEvent} highLightRange={computedData["selectedRange"]} />
+              <Histogram renderData={apiData["Selected-Stat"].map((v)=>{return v["value"]})} width={300} height={300} title={"Histogram Title Here"} highLightValue={computedData["selectedValue"]} uxCallback={this.onUxEvent} />
             </div>
             <div className="row">
               <SimpleList renderData={apiData["Selected-Stat"]} columnList={["state", "value"]} uxCallback={this.onUxEvent} dataTag={""} />

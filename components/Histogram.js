@@ -3,10 +3,14 @@ import ReactDOM from 'react-dom'
 var d3 = require('d3')
 
 export default class Histogram extends Component {
+  constructor(props){
+    super(props)
+    this.updateData = this.updateData.bind(this)
+  }
 
   updateData(data, highlight) {
-    console.log(data, highlight);
-    //const {highLightValue} = this.props
+    const {uxCallback} = this.props
+
     var svg = d3.select(ReactDOM.findDOMNode(this)).select("svg"),
     margin = {top: 20, right: 30, bottom: 30, left: 30},
     width = +svg.attr("width") - margin.left - margin.right,
@@ -35,21 +39,24 @@ export default class Histogram extends Component {
       .attr("class", "bar")
       .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
 
+    var callUx = function(tag, data){
+          uxCallback(tag, data)
+        }
+
     console.log("BUILDING RECT", highlight);
     bar.append("rect")
       .attr("x", 1)
       .attr("width", x(bins[0].x1) - x(bins[0].x0) - 1)
       .attr("height", function(d) { return height - y(d.length); })
       .attr("class", (d)=>{
-        console.log(highlight, d.x0, d.x1);
         if(highlight){
           if((highlight>=d.x0)&&(highlight<=d.x1)){
-            console.log("FOUND IT");
             return "highlight"
           }
         }
         return "normal";
-        });
+        })
+      .on("click", (e)=>{callUx("histogram-click", {"range": [e.x0, e.x1]})});
 
     bar.append("text")
       .attr("y", "-0.25em")
@@ -65,22 +72,11 @@ export default class Histogram extends Component {
     }
 
     componentWillReceiveProps(nextprop) {
-
-    //  if(this.props.renderData!=nextprop.renderData){
-    console.log("GETTING PROPS YO", nextprop)
-    if((nextprop.renderData)&&(nextprop.highLightValue)){
+    //console.log("GETTING PROPS YO", nextprop)
+    if((nextprop.renderData)||(nextprop.highLightValue)){
       console.log("inside yo!!!!!", nextprop)
       this.updateData(nextprop.renderData, nextprop.highLightValue)
     }
-
-
-      ///}
-
-      /*
-      //this will only handle 2 lines, not 1 and not 2+ but 2 - need to rethink this
-      if(JSON.stringify(nextprop.renderData) !== JSON.stringify(this.props.renderData)){
-    }
-    */
   }
 
 
@@ -117,5 +113,6 @@ Histogram.propTypes = {
   height: PropTypes.number.isRequired,
   width: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
-  highLightValue: PropTypes.number.isRequired
+  highLightValue: PropTypes.number.isRequired,
+  uxCallback: PropTypes.func.isRequired
 }

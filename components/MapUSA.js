@@ -9,7 +9,7 @@ export default class MapUSA extends Component {
     this.updateData = this.updateData.bind(this)
   }
 
-  updateData(data) {
+  updateData(data, highlightrange) {
     const {uxCallback} = this.props
 
     var projection = d3.geoAlbersUsa().scale(700).translate([this.props.width / 2, this.props.height / 2])
@@ -50,15 +50,24 @@ export default class MapUSA extends Component {
           uxCallback(tag, data)
         }
 
+      svg.selectAll("path").remove()
       var s = svg.selectAll("path")
         .data(t)
         .enter()
         .append("path")
         .attr("d", path)
-        .attr("class", (d,i)=>{return "states"})
         .style('fill', function(d) {
+          if(highlightrange){
+            if((d.value>=highlightrange[0])&&(d.value<=highlightrange[1])){
+              return "#FF0"
+            }
+            else{
+              return "#000"
+            }
+          }
           return color_scale(d['value']);
         })
+        //.attr("class", "state")
         .on("click", (e)=>{
           callUx("map-click", {"name": e.name, "id": e.id, "value": e.value})
           return tooltip.style("visibility", "visible");
@@ -67,8 +76,9 @@ export default class MapUSA extends Component {
   }
 
   componentWillReceiveProps(nextprop) {
+    console.log(nextprop);
       if(nextprop.renderData){
-        this.updateData(nextprop.renderData)
+        this.updateData(nextprop.renderData, nextprop.highLightRange)
       }
     }
 
@@ -80,7 +90,7 @@ export default class MapUSA extends Component {
       .attr("height", this.props.height)
 
     if(this.props.renderData){
-        this.updateData(this.props.renderData)
+        this.updateData(this.props.renderData, this.props.highLightRange)
       }
   }
 
@@ -103,5 +113,6 @@ MapUSA.propTypes = {
   renderData: PropTypes.array.isRequired,
   height: PropTypes.number.isRequired,
   width: PropTypes.number.isRequired,
-  uxCallback: PropTypes.func.isRequired
+  uxCallback: PropTypes.func.isRequired,
+  highLightRange: PropTypes.array.isRequired
 }
