@@ -8,19 +8,31 @@
     <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 
     <style>
+    @font-face {
+  		font-family: gothbook;
+  		src: url("./fonts/GothamNarrow-Book.otf")
+  	}
+  	@font-face {
+  		font-family: gothmed;
+  		src: url("./fonts/GothamNarrow-Medium.otf")
+  	}
+
+      body{
+        font-family: gothbook;
+      }
       .simple-list{
         -moz-column-count: 2;
-    -moz-column-gap: 8px;
-    -webkit-column-count: 2;
-    -webkit-column-gap: 8px;
-    column-count: 2;
-    column-gap: 8px;
+        -moz-column-gap: 8px;
+        -webkit-column-count: 2;
+        -webkit-column-gap: 8px;
+        column-count: 2;
+        column-gap: 8px;
       }
       .info-box{
         height: 100px;
         text-align: center;
       }
-      .states {
+      .mapstates {
         fill: #ccc;
         stroke: #fff;
       }

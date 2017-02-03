@@ -56,6 +56,7 @@ export default class MapUSA extends Component {
         .enter()
         .append("path")
         .attr("d", path)
+        .attr("class", "mapstates")
         .style('fill', function(d) {
           if(highlightrange){
             if((d.value>=highlightrange[0])&&(d.value<=highlightrange[1])){
@@ -70,13 +71,13 @@ export default class MapUSA extends Component {
         //.attr("class", "state")
         .on("click", (e)=>{
           callUx("map-click", {"name": e.name, "id": e.id, "value": e.value})
-          return tooltip.style("visibility", "visible");
+          //return tooltip.style("visibility", "visible");
         });
     });
   }
 
   componentWillReceiveProps(nextprop) {
-    console.log(nextprop);
+  //  console.log(nextprop);
       if(nextprop.renderData){
         this.updateData(nextprop.renderData, nextprop.highLightRange)
       }

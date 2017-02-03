@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { fetchAPIData, updateSettings, updateComputedData, clearAPIData} from '../actions'
-//import DataVizContainer from '../containers/DataVizContainer'
 import SimpleList from '../components/SimpleList'
 import InfoBox from '../components/InfoBox'
 import TitleBox from '../components/TitleBox'
@@ -17,17 +16,12 @@ class App extends Component {
     this.onUxEvent = this.onUxEvent.bind(this)
   }
 
-  componentDidMount(){
-    console.log("MOUNTED!!!");
+  componentWillMount(){
+    console.log("APP WILL MOUNT!!!");
     this.onUpdateComputedData({"selectedState": "No state selected"})
     this.onUpdateComputedData({"selectedValue": null})
     this.onUpdateComputedData({"selectedRange": null})
-
-    //this.onUpdateSettings({"url": "http://api.census.gov/data/2015/acs1/profile?", "get": "NAME,DP05_0017E", "for":"state:*", "processor": function(v,i){ return parseInt(v["DP05_0017E"])}}, "Median-Ages")
-    //this.onUpdateSettings({"url": "http://api.census.gov/data/2015/acs1/profile?", "get": "NAME,DP03_0062E", "for":null, "processor": function(v,i){return "trest"}}, "SelectedState-Income")
-    //this.onUpdateSettings({"url": "http://api.census.gov/data/2015/acs1/profile?", "get": "NAME,DP02_0058E", "for":"state:*", "processor": function(v,i){return "trest"}}, "Base-Education")
-    this.onUpdateSettings({"url": "http://api.census.gov/data/2015/acs1/profile?", "get": null, "for":"state:*", "processor": null}, "Selected-Stat")
-
+    this.onUpdateComputedData({"selectedStatLabel": null})
   }
 
 
@@ -48,10 +42,15 @@ class App extends Component {
           dispatch(clearAPIData(call))
           dispatch(fetchAPIData(newURL, call, nextProps.apiSettings[call]["processor"]))
         }
+        else{
+          console.log("Is this ever equal?? currUrl vs newURL");
+        }
+
       }
       else{
         dispatch(clearAPIData(call))
         newURL = this.buildURL(nextProps.apiSettings[call])
+        console.log(newURL, call);
         if(newURL){
             dispatch(fetchAPIData(newURL, call, nextProps.apiSettings[call]["processor"]))
         }
@@ -77,13 +76,14 @@ class App extends Component {
 
   onUxEvent(tag, uxdat){
     //PROCESS A UX EVENT - from a child component
-    console.log("ux event ", tag, uxdat);
+    console.log(tag, uxdat);
     switch (tag) {
       case "StatSelected":
+        console.log("processing a stat seletion");
         this.onUpdateComputedData({"selectedRange": null})
         this.onUpdateComputedData({"selectedValue": null})
-        this.onUpdateSettings(uxdat, "Selected-Stat")
-        //console.log("STAT SELECTED!!!!", uxdat);
+        this.onUpdateComputedData({"selectedStatLabel": uxdat["label"]})
+        this.onUpdateSettings(uxdat["apiObj"], "Selected-Stat")
         break;
       case "map-click":
         //tell the histogram to highlight XXXXXX
@@ -94,11 +94,16 @@ class App extends Component {
         //tell the map to highlight certain states
         this.onUpdateComputedData({"selectedValue": null})
         this.onUpdateComputedData({"selectedRange": uxdat["range"]})
+        break;
     }
+
+    //console.log("ux event ", tag, uxdat, computedData["selectedValue"], computedData["selectedRange"]);
+
   }
 
   //the new URL needs to be created after the settings have been updated
   buildURL(settings){
+    console.log(settings);
     let baseurl = "";
     var url = baseurl + settings["url"]
 
@@ -123,15 +128,15 @@ class App extends Component {
   render() {
     const {apiData, apiSettings, computedData } = this.props
 
-    const radOptions = [{"label": "Edu=High School", "apiObj": {"get": "NAME,DP02_0061E,DP02_0058E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.round((parseInt(v["DP02_0061E"])/parseInt(v["DP02_0058E"]))*100)}}}},
-                        {"label": "Edu=Bachlors", "apiObj": {"get":"NAME,DP02_0064E,DP02_0058E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.round((parseInt(v["DP02_0064E"])/parseInt(v["DP02_0058E"]))*100)}}}},
-                        {"label": "Unmarried Births (per 1k)", "apiObj": {"get":"NAME,DP02_0038E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": parseInt(v["DP02_0038E"])}}}},
-                        {"label": "%White", "apiObj": {"get":"NAME,DP05_0032E,DP05_0028E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.round((parseInt(v["DP05_0032E"])/parseInt(v["DP05_0028E"]))*100)}}}},
-                        {"label": "%Black", "apiObj": {"get":"NAME,DP05_0033E,DP05_0028E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.round((parseInt(v["DP05_0033E"])/parseInt(v["DP05_0028E"]))*100)}}}},
-                        {"label": "%Hispanic", "apiObj": {"get":"NAME,DP05_0066E,DP05_0065E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.round((parseInt(v["DP05_0066E"])/parseInt(v["DP05_0065E"]))*100)}}}},
-                        {"label": "% No Health Insurace", "apiObj": {"get":"NAME,DP03_0099E,DP03_0095E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.round((parseInt(v["DP03_0099E"])/parseInt(v["DP03_0095E"]))*100)}}}},
-                        {"label": "Median Age", "apiObj": {"get":"NAME,DP05_0017E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": parseInt(v["DP05_0017E"])}}}},
-                        {"label": "Median HH Income", "apiObj": {"get":"NAME,DP03_0062E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.trunc(parseInt(v["DP03_0062E"])/1000)}}}},
+    const radOptions = [{"label": "Edu=High School", "apiObj": {"url": "http://api.census.gov/data/2015/acs1/profile?", "for":"state:*", "get": "NAME,DP02_0061E,DP02_0058E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.round((parseInt(v["DP02_0061E"])/parseInt(v["DP02_0058E"]))*100)}}}},
+                        {"label": "Edu=Bachlors", "apiObj": {"url": "http://api.census.gov/data/2015/acs1/profile?", "for":"state:*", "get":"NAME,DP02_0064E,DP02_0058E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.round((parseInt(v["DP02_0064E"])/parseInt(v["DP02_0058E"]))*100)}}}},
+                        {"label": "Unmarried Births (per 1k)", "apiObj": {"url": "http://api.census.gov/data/2015/acs1/profile?", "for":"state:*", "get":"NAME,DP02_0038E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": parseInt(v["DP02_0038E"])}}}},
+                        {"label": "%White", "apiObj": {"url": "http://api.census.gov/data/2015/acs1/profile?", "for":"state:*", "get":"NAME,DP05_0032E,DP05_0028E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.round((parseInt(v["DP05_0032E"])/parseInt(v["DP05_0028E"]))*100)}}}},
+                        {"label": "%Black", "apiObj": {"url": "http://api.census.gov/data/2015/acs1/profile?", "for":"state:*", "get":"NAME,DP05_0033E,DP05_0028E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.round((parseInt(v["DP05_0033E"])/parseInt(v["DP05_0028E"]))*100)}}}},
+                        {"label": "%Hispanic", "apiObj": {"url": "http://api.census.gov/data/2015/acs1/profile?", "for":"state:*", "get":"NAME,DP05_0066E,DP05_0065E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.round((parseInt(v["DP05_0066E"])/parseInt(v["DP05_0065E"]))*100)}}}},
+                        {"label": "% No Health Insurace", "apiObj": {"url": "http://api.census.gov/data/2015/acs1/profile?", "for":"state:*", "get":"NAME,DP03_0099E,DP03_0095E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.round((parseInt(v["DP03_0099E"])/parseInt(v["DP03_0095E"]))*100)}}}},
+                        {"label": "Median Age", "apiObj": {"url": "http://api.census.gov/data/2015/acs1/profile?", "for":"state:*", "get":"NAME,DP05_0017E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": parseInt(v["DP05_0017E"])}}}},
+                        {"label": "Median HH Income", "apiObj": {"url": "http://api.census.gov/data/2015/acs1/profile?", "for":"state:*", "get":"NAME,DP03_0062E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.trunc(parseInt(v["DP03_0062E"])/1000)}}}},
                       ]
 
     return (
@@ -139,7 +144,7 @@ class App extends Component {
       <div className="container">
         <h1>Generic DataViz Container</h1>
 
-        <TitleBox label={apiData["selectedState"]} />
+        <h2>{computedData["selectedStatLabel"]}</h2>
 
         <div className="row">
           <RadioButtons uxTag={"StatSelected"} uxCallback={this.onUxEvent} renderData={radOptions} />
@@ -148,6 +153,9 @@ class App extends Component {
 
         {(apiData["Selected-Stat"]) &&
           <div>
+          <div className="row">
+            <h3>Click on a state or a bar in the histogram:</h3>
+          </div>
             <div className="row">
               <MapUSA height={300} width={500} renderData={apiData["Selected-Stat"]} uxCallback={this.onUxEvent} highLightRange={computedData["selectedRange"]} />
               <Histogram renderData={apiData["Selected-Stat"].map((v)=>{return v["value"]})} width={300} height={300} title={"Histogram Title Here"} highLightValue={computedData["selectedValue"]} uxCallback={this.onUxEvent} />

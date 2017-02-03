@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux'
 import {
-  RECEIVE_DATA, UPDATE_SETTINGS, UPDATE_CONTAINER, CLEAR_DATA
+  RECEIVE_DATA, UPDATE_SETTINGS, UPDATE_COMPUTED, CLEAR_DATA
 } from '../actions'
 
 /*
@@ -63,8 +63,7 @@ function apiSettings(state={}, action) {
 
 function computedData(state={}, action) {
   switch (action.type) {
-    case UPDATE_CONTAINER:
-      console.log("reducing the update CONTAINER call")
+    case UPDATE_COMPUTED:
       return Object.assign({}, state, action.settings)
     default:
       return state

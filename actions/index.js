@@ -5,7 +5,7 @@ export const RECEIVE_DATA = 'RECEIVE_DATA'
 //export const SELECT_NETWORK = 'SELECT_NETWORK'
 //export const SELECT_WEEK = 'SELECT_WEEK'
 export const UPDATE_SETTINGS = 'UPDATE_SETTINGS'
-export const UPDATE_CONTAINER = 'UPDATE_CONTAINER'
+export const UPDATE_COMPUTED = 'UPDATE_COMPUTED'
 export const CLEAR_DATA = 'CLEAR_DATA'
 /*
 export function selectNetwork(net){
@@ -32,7 +32,7 @@ export function updateSettings(settings, tag){
 
 export function updateComputedData(settings){
   return{
-    type: UPDATE_CONTAINER,
+    type: UPDATE_COMPUTED,
     settings
   }
 }

@@ -43,7 +43,6 @@ export default class Histogram extends Component {
           uxCallback(tag, data)
         }
 
-    console.log("BUILDING RECT", highlight);
     bar.append("rect")
       .attr("x", 1)
       .attr("width", x(bins[0].x1) - x(bins[0].x0) - 1)
@@ -72,9 +71,7 @@ export default class Histogram extends Component {
     }
 
     componentWillReceiveProps(nextprop) {
-    //console.log("GETTING PROPS YO", nextprop)
     if((nextprop.renderData)||(nextprop.highLightValue)){
-      console.log("inside yo!!!!!", nextprop)
       this.updateData(nextprop.renderData, nextprop.highLightValue)
     }
   }
@@ -95,7 +92,6 @@ export default class Histogram extends Component {
 
   render() {
     const {renderData, title} = this.props
-
 
     return (
       <div className="col-sm-4">
