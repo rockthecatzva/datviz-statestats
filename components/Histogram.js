@@ -11,16 +11,21 @@ export default class Histogram extends Component {
   updateData(data, highlight) {
     const {uxCallback} = this.props
 
-    var svg = d3.select(ReactDOM.findDOMNode(this)).select("svg"),
-    margin = {top: 20, right: 30, bottom: 30, left: 30},
-    width = +svg.attr("width") - margin.left - margin.right,
-    height = +svg.attr("height") - margin.top - margin.bottom
+    let el = ReactDOM.findDOMNode(this),
+        containerW = parseInt($(el).css("width").replace("px", "")),
+        containerH = parseInt($(el).css("height").replace("px", ""));
+
+    var svg = d3.select(el).select("svg")
+      .attr("width", containerW)
+      .attr("height", containerH);
+
+    let margin = {top: 20, right: 30, bottom: 40, left: 0};
 
     var formatCount = d3.format(",.0f");
 
     var x = d3.scaleLinear()
       .domain([d3.min(data), d3.max(data)])
-      .range([10, width])
+      .range([10, (containerW-margin.left-margin.right)])
       .interpolate(d3.interpolateRound)
 
     var bins = d3.histogram()
@@ -30,7 +35,7 @@ export default class Histogram extends Component {
 
     var y = d3.scaleLinear()
       .domain([0, d3.max(bins, function(d) { return d.length; })])
-      .range([height, 15]);
+      .range([(containerH-margin.top-margin.bottom), 15]);
 
     svg.selectAll(".bar").remove()
     var bar = svg.selectAll(".bar")
@@ -46,10 +51,12 @@ export default class Histogram extends Component {
     bar.append("rect")
       .attr("x", 1)
       .attr("width", x(bins[0].x1) - x(bins[0].x0) - 1)
-      .attr("height", function(d) { return height - y(d.length); })
+      .attr("height", function(d) { return (containerH-margin.top-margin.bottom) - y(d.length); })
       .attr("class", (d)=>{
         if(highlight){
-          if((highlight>=d.x0)&&(highlight<=d.x1)){
+
+          if((highlight>(d.x0))&&(highlight<=d.x1)){
+            console.log(highlight, (d.x0+0.0001), d.x1);
             return "highlight"
           }
         }
@@ -66,7 +73,7 @@ export default class Histogram extends Component {
       svg.selectAll(".axis").remove()
       svg.append("g")
         .attr("class", "axis axis--x")
-        .attr("transform", "translate(0," + height + ")")
+        .attr("transform", "translate(0," + (containerH-margin.top-margin.bottom) + ")")
         .call(d3.axisBottom(x));
     }
 
@@ -78,24 +85,21 @@ export default class Histogram extends Component {
 
 
   componentDidMount() {
-    var el = ReactDOM.findDOMNode(this)
-    var formatDate = d3.timeFormat("%d-%b-%y")
-    var svg = d3.select(el).append("svg")
-      .attr("width", this.props.width)
-      .attr("height", this.props.height)
+    var el = ReactDOM.findDOMNode(this);
+    var formatDate = d3.timeFormat("%d-%b-%y");
+    var svg = d3.select(el).append("svg");
 
-      if(this.props.renderData){
-        this.updateData(this.props.renderData)
-      }
+    if(this.props.renderData){
+      this.updateData(this.props.renderData)
+    }
   }
 
 
   render() {
-    const {renderData, title} = this.props
+    const {renderData} = this.props
 
     return (
-      <div className="col-sm-4">
-      <h2>{title}</h2>
+      <div className="fullw fullh">
       {(!renderData) &&
         <div className="loading">Loading&#8230;</div>
       }
@@ -106,9 +110,9 @@ export default class Histogram extends Component {
 
 Histogram.propTypes = {
   renderData: PropTypes.array.isRequired,
-  height: PropTypes.number.isRequired,
-  width: PropTypes.number.isRequired,
-  title: PropTypes.string.isRequired,
+  //height: PropTypes.number.isRequired,
+  //width: PropTypes.number.isRequired,
+  //title: PropTypes.string.isRequired,
   highLightValue: PropTypes.number.isRequired,
   uxCallback: PropTypes.func.isRequired
 }

@@ -2,26 +2,11 @@ import fetch from 'isomorphic-fetch'
 
 export const REQUEST_DATA = 'REQUEST_DATA'
 export const RECEIVE_DATA = 'RECEIVE_DATA'
-//export const SELECT_NETWORK = 'SELECT_NETWORK'
-//export const SELECT_WEEK = 'SELECT_WEEK'
 export const UPDATE_SETTINGS = 'UPDATE_SETTINGS'
 export const UPDATE_COMPUTED = 'UPDATE_COMPUTED'
 export const CLEAR_DATA = 'CLEAR_DATA'
-/*
-export function selectNetwork(net){
-  return{
-    type: SELECT_NETWORK,
-    selectedNetwork: net
-  }
-}
 
-export function selectWeek(wk){
-  return {
-    type: SELECT_WEEK,
-    selectedWeek: wk
-  }
-}
-*/
+
 export function updateSettings(settings, tag){
   return {
     type: UPDATE_SETTINGS,
@@ -66,11 +51,15 @@ export function fetchAPIData(url, treeparent, processor){
 }
 
 function receiveAPIData(treeparent, indata, processor){
-  //console.log("ready to process data ~~~~~", processor);
+  console.log("ready to process data ~~~~~", indata);
+  if(Array.isArray(indata[0])){
+    indata = csvtojson(indata)
+  }
+
   return{
     type: RECEIVE_DATA,
     treeparent,
-    data: csvtojson(indata).map(processor)
+    data: indata.map(processor)
   }
 }
 

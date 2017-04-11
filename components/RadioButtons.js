@@ -13,18 +13,18 @@ export default class RadioButtons extends Component {
     const { renderData, uxCallback } = this.props
 
     return (
-      <ul className={"col-sm-12 simple-list"}>
+      <div>
       {(!renderData) &&
         <div className="loading">Loading&#8230;</div>
       }
 
       {(renderData) &&
         renderData.map((v,i)=>{
-          return(<li onClick={()=>{return uxCallback(this.props.uxTag, v)}} >{v["label"]}</li>)
+          return(<button type="button" className="radiobuttons btn btn-outline-secondary" onClick={()=>{return uxCallback(this.props.uxTag, v)}} >{v["label"]}</button>)
           })
         }
 
-        </ul>
+        </div>
       )
     }
   }

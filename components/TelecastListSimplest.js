@@ -26,7 +26,7 @@ export default class TelecastListSimplest extends Component {
 
       {columnList &&
         columnList.map((v,i)=>{
-          return (<th column={i}>{v}</th>)
+          //return (<th column={i}>{v}</th>)
         })
       }
       </tr>
