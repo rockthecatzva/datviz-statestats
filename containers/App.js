@@ -1,41 +1,35 @@
-import React, { Component, PropTypes } from 'react'
-import { connect } from 'react-redux'
-import { fetchAPIData, updateSettings, updateComputedData, clearAPIData} from '../actions'
-import SimpleList from '../components/SimpleList'
-import InfoBox from '../components/InfoBox'
-import TitleBox from '../components/TitleBox'
-import Histogram from '../components/Histogram'
-import RadioButtons from '../components/RadioButtons'
-import MapUSA from '../components/MapUSA'
+import React, { Component, PropTypes } from 'react';
+import { connect } from 'react-redux';
+import { fetchAPIData, updateSettings, updateComputedData, clearAPIData} from '../actions';
+import SimpleList from '../components/SimpleList';
+//import InfoBox from '../components/InfoBox';
+//import TitleBox from '../components/TitleBox';
+import Histogram from '../components/Histogram';
+import RadioButtons from '../components/RadioButtons';
+import MapUSA from '../components/MapUSA';
 
 class App extends Component {
   constructor(props) {
-    super(props)
-    this.onUpdateSettings = this.onUpdateSettings.bind(this)
-    this.onUpdateComputedData = this.onUpdateComputedData.bind(this)
-    this.onUxEvent = this.onUxEvent.bind(this)
+    super(props);
+    this.onUpdateSettings = this.onUpdateSettings.bind(this);
+    this.onUpdateComputedData = this.onUpdateComputedData.bind(this);
+    this.onUxEvent = this.onUxEvent.bind(this);
   }
 
   componentWillMount(){
-    //console.log("APP WILL MOUNT!!!");
-    this.onUpdateComputedData({"selectedState": "No state selected"})
-    this.onUpdateComputedData({"selectedValue": null})
-    this.onUpdateComputedData({"selectedRange": null})
-    this.onUpdateComputedData({"selectedStatLabel": null})
+    this.onUpdateComputedData({"selectedState": "No state selected", "selectedValue": null, "selectedRange": null, "selectedStatLabel": null})
   }
-
 
   componentWillReceiveProps(nextProps) {
     const { dispatch } = this.props
-    let newURL = null
-    let currUrl = ""
+    let newURL = null,
+        currUrl = "";
 
     for(var call in nextProps.apiSettings){
       if(this.props.apiSettings.hasOwnProperty(call)){
-        currUrl = this.buildURL(this.props.apiSettings[call])
-        newURL = this.buildURL(nextProps.apiSettings[call])
+        currUrl = this.buildURL(this.props.apiSettings[call]);
+        newURL = this.buildURL(nextProps.apiSettings[call]);
 
-        //console.log(nextProps.apiSettings[call]["processor"]);
         if(currUrl!=newURL)
         {
           //one of the properties has changed - make a new API call
@@ -43,14 +37,14 @@ class App extends Component {
           dispatch(fetchAPIData(newURL, call, nextProps.apiSettings[call]["processor"]))
         }
         else{
-          //console.log("Is this ever equal?? currUrl vs newURL");
+
         }
 
       }
       else{
         dispatch(clearAPIData(call))
         newURL = this.buildURL(nextProps.apiSettings[call])
-//        console.log(newURL, call);
+
         if(newURL){
           dispatch(fetchAPIData(newURL, call, nextProps.apiSettings[call]["processor"]))
         }
@@ -61,8 +55,6 @@ class App extends Component {
   onUpdateSettings(settings, tag){
     //let newsettings = Object.assign({}, this.props.apiSettings[tag], settings)
     let newsettings = settings//this means no more mixing - state is overwritten
-
-
     this.props.dispatch((dispatch)=>{
       dispatch(updateSettings(newsettings, tag))
     })
@@ -78,10 +70,8 @@ class App extends Component {
 
   onUxEvent(tag, uxdat){
     //PROCESS A UX EVENT - from a child component
-    //console.log("ux event called - ", tag, uxdat);
     switch (tag) {
       case "StatSelected":
-
         this.onUpdateComputedData({"selectedRange": null, "selectedValue": null, "selectedStatLabel": uxdat["label"]});
         this.onUpdateSettings(uxdat["apiObj"], "Selected-Stat");//this called last - it initiates the api call!
         break;
@@ -98,30 +88,27 @@ class App extends Component {
 
   //the new URL needs to be created after the settings have been updated
   buildURL(settings){
-    //console.log(settings);
-    let baseurl = "";
-    var url = baseurl + settings["url"]
+    let baseurl = "",
+        url = baseurl + settings["url"];
 
     for (var set in settings){
-      if(settings[set] == null) return null
-
+      if(settings[set] == null) return null;
       if(Array.isArray(settings[set])){
         for(var subset in settings[set]){
-          url += "&"+set+"%5B%5D="+settings[set][subset]
+          url += "&"+set+"%5B%5D="+settings[set][subset];
         }
       }
       else{
         if(set!="url"&&set!="processor"){
-          url += "&"+set+"="+settings[set]
+          url += "&"+set+"="+settings[set];
         }
       }
     }
-    //console.log(url);
-    return url
+    return url;
   }
 
   render() {
-    const {apiData, apiSettings, computedData } = this.props
+    const {apiData, apiSettings, computedData } = this.props;
 
     const radOptions = [{"label": "Edu=High School", "apiObj": {"url": "http://api.census.gov/data/2015/acs1/profile?", "for":"state:*", "get": "NAME,DP02_0061E,DP02_0058E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.round((parseInt(v["DP02_0061E"])/parseInt(v["DP02_0058E"]))*100)}}}},
     {"label": "Edu=Bachlors", "apiObj": {"url": "http://api.census.gov/data/2015/acs1/profile?", "for":"state:*", "get":"NAME,DP02_0064E,DP02_0058E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.round((parseInt(v["DP02_0064E"])/parseInt(v["DP02_0058E"]))*100)}}}},
@@ -134,7 +121,7 @@ class App extends Component {
     {"label": "Median HH Income", "apiObj": {"url": "http://api.census.gov/data/2015/acs1/profile?", "for":"state:*", "get":"NAME,DP03_0062E", "processor": (v,i)=>{return {"id": parseInt(v["state"]), "state": v["NAME"], "value": Math.trunc(parseInt(v["DP03_0062E"])/1000)}}}},
     {"label": "% Highly Religious", "apiObj": {"url": "http://rockthecatzva.com/dataviz-statestats/religosity.json", "processor": (v,i)=>{return {"id": parseInt(v["id"]), "state": v["state"], "value": parseInt(v["val"])}}}},
     {"label": "% Trump", "apiObj": {"url": "http://rockthecatzva.com/dataviz-statestats/trump.json", "processor": (v,i)=>{return {"id": parseInt(v["id"]), "state": v["state"], "value": parseInt(v["val"])}}}},
-  ]
+  ];
 
   return (
       <div className="container">
@@ -147,11 +134,11 @@ class App extends Component {
 
         {(apiData["Selected-Stat"]) &&
         <div>
-            <div className="col-sm-8">
-                <MapUSA renderData={apiData["Selected-Stat"]} uxCallback={this.onUxEvent} highLightRange={computedData["selectedRange"]} />
+            <div className="col-md-8 col-sm-12">
+              <MapUSA renderData={apiData["Selected-Stat"]} uxCallback={this.onUxEvent} highLightRange={computedData["selectedRange"]} />
             </div>
-            <div className="col-sm-4 col-xs-10">
-                <Histogram renderData={apiData["Selected-Stat"].map((v)=>{return v["value"]})} highLightValue={computedData["selectedValue"]} uxCallback={this.onUxEvent} />
+            <div className="col-md-4 col-sm-12">
+              <Histogram renderData={apiData["Selected-Stat"].map((v)=>{return v["value"]})} highLightValue={computedData["selectedValue"]} uxCallback={this.onUxEvent} />
             </div>
             <div>
               <SimpleList renderData={apiData["Selected-Stat"]} columnList={["state", "value"]} uxCallback={this.onUxEvent} dataTag={""} />
@@ -159,7 +146,7 @@ class App extends Component {
         </div>
         }
       </div>
-
+        <br/>
         <p>Source: American Community Survrey (ACS) 2015. Religousity data is by Pew Research <a href="http://www.pewresearch.org/fact-tank/2016/02/29/how-religious-is-your-state/?state=alabama">link</a></p>
     </div>
 )
@@ -174,7 +161,7 @@ App.propTypes = {
 }
 
 function mapStateToProps(state) {
-  const { apiData, apiSettings, computedData } = state
+  const { apiData, apiSettings, computedData } = state;
 
   return {
     apiData,

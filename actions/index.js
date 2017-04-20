@@ -51,7 +51,7 @@ export function fetchAPIData(url, treeparent, processor){
 }
 
 function receiveAPIData(treeparent, indata, processor){
-  console.log("ready to process data ~~~~~", indata);
+  //console.log("ready to process data ~~~~~", indata);
   if(Array.isArray(indata[0])){
     indata = csvtojson(indata)
   }

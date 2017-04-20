@@ -30,7 +30,7 @@ export default class Histogram extends Component {
 
     var bins = d3.histogram()
       .domain([x.domain()[0], x.domain()[1]])
-      .thresholds(x.ticks(8))
+      .thresholds(x.ticks(6))
       (data)
 
     var y = d3.scaleLinear()
@@ -56,13 +56,12 @@ export default class Histogram extends Component {
         if(highlight){
 
           if((highlight>(d.x0))&&(highlight<=d.x1)){
-            console.log(highlight, (d.x0+0.0001), d.x1);
             return "highlight"
           }
         }
         return "normal";
         })
-      .on("click", (e)=>{callUx("histogram-click", {"range": [e.x0, e.x1]})});
+      .on("click", (d, i)=>{console.log("HERE", i); callUx("histogram-click", {"range": [d.x0, (i==bins.length-1 ? (d.x1)+1:d.x1)]})});
 
     bar.append("text")
       .attr("y", "-0.25em")
@@ -100,7 +99,7 @@ export default class Histogram extends Component {
 
     return (
       <div className="fullw fullh">
-      {(!renderData) &&
+      {(1) &&
         <div className="loading">Loading&#8230;</div>
       }
       </div>

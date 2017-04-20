@@ -25,7 +25,6 @@ export default class MapUSA extends Component {
     d3.json("us.json", function(json) {
       var d = topojson.feature(json, json.objects.states)
       var t= d.features.map(function(val,i){
-
         //should this be in the App.js - the component needs to be dumber???
         for (var i = 0; i < data.length; i++) {
           if (data[i].id==val.id){
@@ -42,12 +41,6 @@ export default class MapUSA extends Component {
       let median_val = d3.median(d.features, (d)=>{return d['value']});
       var color_scale = d3.scaleLinear().domain([min_val, median_val, max_val]).range(['blue', 'white', 'red']);
 
-      var tooltip = svg.selectAll("div")
-      	.style("position", "absolute")
-      	.style("z-index", "10")
-      	.style("visibility", "hidden")
-      	.text("a simple tooltip");
-
       var callUx = function(tag, data){
           uxCallback(tag, data)
         }
@@ -61,18 +54,19 @@ export default class MapUSA extends Component {
         .attr("class", "mapstates")
         .style('fill', function(d) {
           if(highlightrange){
-            if((d.value>=highlightrange[0])&&(d.value<=highlightrange[1])){
+            console.log("should highlight? ", d.name, d.value, highlightrange[0], highlightrange[1]);
+            if(((d.value)>=(highlightrange[0]))&&((d.value)<highlightrange[1])){
+              console.log("YEP HIGHLIGHTING");
               return "#FF0"
             }
             else{
-              return "#000"
+              return "#b2b4b7"
             }
           }
           return color_scale(d['value']);
         })
         .on("click", (e)=>{
           callUx("map-click", {"name": e.name, "id": e.id, "value": e.value})
-          //return tooltip.style("visibility", "visible");
         });
     });
   }
@@ -98,9 +92,11 @@ export default class MapUSA extends Component {
   render() {
     const {renderData} = this.props
 
+    console.log(renderData);
+
     return (
       <div className="fullw fullh">
-      {(!this.props.renderData) &&
+      {(1) &&
         <div className="loading">Loading&#8230;</div>
       }
       </div>
@@ -110,8 +106,6 @@ export default class MapUSA extends Component {
 
 MapUSA.propTypes = {
   renderData: PropTypes.array.isRequired,
-  //height: PropTypes.number.isRequired,
-  //width: PropTypes.number.isRequired,
   uxCallback: PropTypes.func.isRequired,
   highLightRange: PropTypes.array.isRequired
 }

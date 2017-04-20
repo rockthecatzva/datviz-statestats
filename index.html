@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>US Demographics by State</title>
+  <link rel="stylesheet" type="text/css" href="css/loading-spinner.css" >
   <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap-theme.min.css">
   <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
   <script type="text/javascript" src="./node_modules/jquery/dist/jquery.min.js"></script>
@@ -32,9 +33,23 @@
     font-family: gothbook;
   }
 
+
+  .loading{
+    position: absolute;
+  }
+
   .btn{
     border: 1px solid rgb(0, 0, 0);
     background-color: white;
+  }
+
+  .btn .active {
+    background-color: red;
+  }
+
+  .radiobuttons {
+    margin-right: 8px;
+    margin-bottom: 8px;
   }
 
   .simple-list button{
@@ -76,13 +91,8 @@
   .fullh{
     height: 400px;
   }
-
-  .radiobuttons .active{
-    color: red;
-  }
-
   </style>
-  <link rel="stylesheet" type="text/css" href="css/loading-spinner.css" >
+
 
 </head>
 <body>
