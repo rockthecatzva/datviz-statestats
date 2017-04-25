@@ -124,7 +124,7 @@ class App extends Component {
   ];
 
   return (
-      <div className="container">
+      <div className="container" onclick="console.log('body click')" >
         <h5>1. Click a demographic button below.</h5>
         <RadioButtons uxTag={"StatSelected"} uxCallback={this.onUxEvent} renderData={radOptions} />
 

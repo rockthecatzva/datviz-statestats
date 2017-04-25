@@ -52,16 +52,16 @@ export default class Histogram extends Component {
       .attr("x", 1)
       .attr("width", x(bins[0].x1) - x(bins[0].x0) - 1)
       .attr("height", function(d) { return (containerH-margin.top-margin.bottom) - y(d.length); })
-      .attr("class", (d)=>{
+      .attr("class", (d, i)=>{
+        //console.log("Histo highlight? ", highlight, d.x0, d.x1, i, (i==bins.length-1 ? (d.x1)+1:d.x1));
         if(highlight){
-
-          if((highlight>(d.x0))&&(highlight<=d.x1)){
+          if((highlight>(i==0 ? (d.x0)-1:d.x0))&&(highlight<=d.x1)){
             return "highlight"
           }
         }
         return "normal";
         })
-      .on("click", (d, i)=>{console.log("HERE", i); callUx("histogram-click", {"range": [d.x0, (i==bins.length-1 ? (d.x1)+1:d.x1)]})});
+      .on("click", (d, i)=>{callUx("histogram-click", {"range": [d.x0, (i==bins.length-1 ? (d.x1)+1:d.x1)]})});
 
     bar.append("text")
       .attr("y", "-0.25em")
@@ -109,9 +109,6 @@ export default class Histogram extends Component {
 
 Histogram.propTypes = {
   renderData: PropTypes.array.isRequired,
-  //height: PropTypes.number.isRequired,
-  //width: PropTypes.number.isRequired,
-  //title: PropTypes.string.isRequired,
   highLightValue: PropTypes.number.isRequired,
   uxCallback: PropTypes.func.isRequired
 }

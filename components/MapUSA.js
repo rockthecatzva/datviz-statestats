@@ -54,9 +54,9 @@ export default class MapUSA extends Component {
         .attr("class", "mapstates")
         .style('fill', function(d) {
           if(highlightrange){
-            console.log("should highlight? ", d.name, d.value, highlightrange[0], highlightrange[1]);
+            //console.log("should highlight? ", d.name, d.value, highlightrange[0], highlightrange[1]);
             if(((d.value)>=(highlightrange[0]))&&((d.value)<highlightrange[1])){
-              console.log("YEP HIGHLIGHTING");
+              //console.log("YEP HIGHLIGHTING");
               return "#FF0"
             }
             else{
@@ -73,7 +73,7 @@ export default class MapUSA extends Component {
 
   componentWillReceiveProps(nextprop) {
       if(nextprop.renderData){
-        console.log("sending this to the render func ",  nextprop.highLightRange);
+        //console.log("sending this to the render func ",  nextprop.highLightRange);
         this.updateData(nextprop.renderData, nextprop.highLightRange)
       }
     }
@@ -91,8 +91,7 @@ export default class MapUSA extends Component {
 
   render() {
     const {renderData} = this.props
-
-    console.log(renderData);
+    //console.log(renderData);
 
     return (
       <div className="fullw fullh">
