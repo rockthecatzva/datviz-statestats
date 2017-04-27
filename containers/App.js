@@ -7,6 +7,8 @@ import SimpleList from '../components/SimpleList';
 import Histogram from '../components/Histogram';
 import RadioButtons from '../components/RadioButtons';
 import MapUSA from '../components/MapUSA';
+import Dropdown from '../components/Dropdown'
+
 
 class App extends Component {
   constructor(props) {
@@ -127,6 +129,7 @@ class App extends Component {
       <div className="container" onclick="console.log('body click')" >
         <h5>1. Click a demographic button below.</h5>
         <RadioButtons uxTag={"StatSelected"} uxCallback={this.onUxEvent} renderData={radOptions} />
+        <Dropdown uxTag={"StatSelected"} uxCallback={this.onUxEvent} renderData={radOptions} />
 
         <h1>{computedData["selectedStatLabel"]} by State</h1>
 

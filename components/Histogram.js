@@ -55,8 +55,9 @@ export default class Histogram extends Component {
       .attr("class", (d, i)=>{
         //console.log("Histo highlight? ", highlight, d.x0, d.x1, i, (i==bins.length-1 ? (d.x1)+1:d.x1));
         if(highlight){
-          if((highlight>(i==0 ? (d.x0)-1:d.x0))&&(highlight<=d.x1)){
-            return "highlight"
+          console.log(d.filter((v)=>{return v==highlight}));
+          if(d.filter((v)=>{return v==highlight}).length){
+            return "highlight";
           }
         }
         return "normal";
