@@ -20,7 +20,7 @@ export default class RadioButtons extends Component {
 
       {(renderData) &&
         renderData.map((v,i)=>{
-          return(<button type="button" className="radiobuttons btn btn-outline-secondary" onClick={()=>{return uxCallback(this.props.uxTag, v)}} >{v["label"]}</button>)
+          return(<button type="button" className="radiobuttons btn btn-outline-secondary" onClick={()=>{uxCallback(this.props.uxTag, v)}} >{v["label"]}</button>)
           })
         }
 

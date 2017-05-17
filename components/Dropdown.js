@@ -12,16 +12,21 @@ export default class Dropdown extends Component {
   render() {
     const { renderData, uxCallback } = this.props
 
+    let f = (v)=>{
+      console.log("it worked!!!", v);
+      //uxCallback(this.props.uxTag, e.target.options[e.target.selectedIndex].val);
+    }
+
+    let par = this;
+
     return (
-      <div className="dropdown">
-        <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Select a demo
-        </button>
-        <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <button className="dropdown-item" href="#">Action</button>
-          <button className="dropdown-item" href="#">Another action</button>
-          <button className="dropdown-item" href="#">Something else here</button>
-        </div>
+      <div>
+        <h5>select a demographic variable</h5>
+        <select onChange={()=>f(par.selectedIndex)} >
+          {renderData.map((v,i)=>{
+            return(<option>{v["label"]}</option>)
+            })}
+        </select>
 
 
         </div>

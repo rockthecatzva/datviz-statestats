@@ -28,7 +28,7 @@ export default class MapUSA extends Component {
         //should this be in the App.js - the component needs to be dumber???
         for (var i = 0; i < data.length; i++) {
           if (data[i].id==val.id){
-            return Object.assign({}, val, {"value": data[i].value, "name": data[i].state})
+            return Object.assign({}, val, {"name": data[i].state}, data[i])
           }
         }
       return val
@@ -42,6 +42,7 @@ export default class MapUSA extends Component {
       var color_scale = d3.scaleLinear().domain([min_val, median_val, max_val]).range(['blue', 'white', 'red']);
 
       var callUx = function(tag, data){
+        console.log(data);
           uxCallback(tag, data)
         }
 
@@ -65,8 +66,9 @@ export default class MapUSA extends Component {
           }
           return color_scale(d['value']);
         })
-        .on("click", (e)=>{
-          callUx("map-click", {"name": e.name, "id": e.id, "value": e.value})
+        .on("click", function(e){
+          d3.event.stopPropagation();
+          callUx("map-click", e);
         });
     });
   }
