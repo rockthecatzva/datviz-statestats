@@ -2,8 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { fetchAPIData, updateSettings, updateComputedData, clearAPIData} from '../actions';
 import SimpleList from '../components/SimpleList';
-//import InfoBox from '../components/InfoBox';
-//import TitleBox from '../components/TitleBox';
 import Histogram from '../components/Histogram';
 import RadioButtons from '../components/RadioButtons';
 import MapUSA from '../components/MapUSA';
@@ -86,7 +84,6 @@ class App extends Component {
         break;
       case "map-click":
         //tell the histogram to highlight XXXXXX
-        console.log("anyone", uxdat);
         this.onUpdateComputedData({"selectedValue": uxdat["value"], "selectedRange": null, "mapMessage":(uxdat["name"]+": "+uxdat["value"]+uxdat["numformat"])});
         break;
       case "histogram-click":
@@ -137,7 +134,6 @@ class App extends Component {
   return (
       <div className="container" onClick={this.onClearSettings} >
         <h5>1. Click a demographic button below.</h5>
-        <RadioButtons uxTag={"StatSelected"} uxCallback={this.onUxEvent} renderData={radOptions} />
         <Dropdown uxTag={"StatSelected"} uxCallback={this.onUxEvent} renderData={radOptions} />
 
         <h1>{computedData["mapMessage"]} </h1>

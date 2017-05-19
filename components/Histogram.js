@@ -99,9 +99,6 @@ export default class Histogram extends Component {
 
     return (
       <div className="fullw fullh">
-      {(1) &&
-        <div className="loading">Loading&#8230;</div>
-      }
       </div>
     )
   }

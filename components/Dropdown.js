@@ -10,21 +10,20 @@ export default class Dropdown extends Component {
 
 
   render() {
-    const { renderData, uxCallback } = this.props
+    const { renderData, uxCallback, uxTag} = this.props
 
-    let f = (v)=>{
-      console.log("it worked!!!", v);
-      //uxCallback(this.props.uxTag, e.target.options[e.target.selectedIndex].val);
+    function onSelectItem(e){
+      console.log("it worked!!!", e.target.options[e.target.selectedIndex].value);
+      let i = e.target.options[e.target.selectedIndex].value;
+
+      uxCallback(uxTag, renderData[i]);
     }
-
-    let par = this;
 
     return (
       <div>
-        <h5>select a demographic variable</h5>
-        <select onChange={()=>f(par.selectedIndex)} >
+        <select onChange={onSelectItem} >
           {renderData.map((v,i)=>{
-            return(<option>{v["label"]}</option>)
+            return(<option value={i}>{v["label"]}</option>)
             })}
         </select>
 
