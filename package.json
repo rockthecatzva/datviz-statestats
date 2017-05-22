@@ -30,6 +30,7 @@
     "babelify": "^7.3.0",
     "bootstrap": "^3.3.7",
     "browserify": "^13.1.0",
+    "d3": "^4.9.1",
     "d3-geo": "^1.4.0",
     "gulp": "^3.9.1",
     "halogen": "^0.2.0",
@@ -40,6 +41,7 @@
     "redux": "^3.2.1",
     "redux-logger": "^2.4.0",
     "redux-thunk": "^1.0.3",
+    "spectre.css": "^0.2.14",
     "topojson": "^2.2.0",
     "vinyl-source-stream": "^1.1.0"
   },

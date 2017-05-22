@@ -11,10 +11,10 @@ export default class MapUSA extends Component {
 
   updateData(data, highlightrange) {
     const {uxCallback} = this.props
-
+    //console.log(window.getComputedStyle(el).width);
     let el = ReactDOM.findDOMNode(this),
-        containerW = parseInt($(el).css("width").replace("px", "")),
-        containerH = parseInt($(el).css("height").replace("px", "")),
+        containerW = parseInt((window.getComputedStyle(el).width).replace("px", "")),
+        containerH = parseInt((window.getComputedStyle(el).height).replace("px", "")),
         projection = d3.geoAlbersUsa().scale(containerW+100).translate([containerW / 2, containerH / 2]),
         path = d3.geoPath().projection(projection);
 

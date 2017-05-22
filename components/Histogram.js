@@ -12,8 +12,8 @@ export default class Histogram extends Component {
     const {uxCallback} = this.props
 
     let el = ReactDOM.findDOMNode(this),
-        containerW = parseInt($(el).css("width").replace("px", "")),
-        containerH = parseInt($(el).css("height").replace("px", ""));
+        containerW = parseInt((window.getComputedStyle(el).width).replace("px", "")),
+        containerH = parseInt((window.getComputedStyle(el).height).replace("px", ""));
 
     var svg = d3.select(el).select("svg")
       .attr("width", containerW)

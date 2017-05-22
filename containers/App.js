@@ -133,29 +133,39 @@ class App extends Component {
 
   return (
       <div className="container" onClick={this.onClearSettings} >
-        <h5>1. Click a demographic button below.</h5>
-        <Dropdown uxTag={"StatSelected"} uxCallback={this.onUxEvent} renderData={radOptions} />
+        <div className="columns">
 
-        <h1>{computedData["mapMessage"]} </h1>
+          <div className="col-12">
+            <h5>1. Click a demographic button below.</h5>
+            <Dropdown uxTag={"StatSelected"} uxCallback={this.onUxEvent} renderData={radOptions} />
+            <h1>{computedData["mapMessage"]} </h1>
+          </div>
 
-        <div className="row histomap-sect">
-
-        {(apiData["Selected-Stat"]) &&
-        <div>
-            <div className="col-md-8 col-sm-12">
+          <div className="col-md-8 col-sm-12">
+            {(apiData["Selected-Stat"]) &&
               <MapUSA renderData={apiData["Selected-Stat"]} uxCallback={this.onUxEvent} highLightRange={computedData["selectedRange"]} />
+            }
+          </div>
+
+          {(apiData["Selected-Stat"]) &&
+            <div className="columns">
+                <div className="col-md-8 col-sm-12">
+                  <MapUSA renderData={apiData["Selected-Stat"]} uxCallback={this.onUxEvent} highLightRange={computedData["selectedRange"]} />
+                </div>
+                <div className="col-md-4 col-sm-12">
+                  <Histogram renderData={apiData["Selected-Stat"].map((v)=>{return v["value"]})} highLightValue={computedData["selectedValue"]} uxCallback={this.onUxEvent} />
+                </div>
+                <div>
+                  <SimpleList renderData={apiData["Selected-Stat"]} columnList={["state", "value"]} uxCallback={this.onUxEvent} dataTag={""} />
+                </div>
             </div>
-            <div className="col-md-4 col-sm-12">
-              <Histogram renderData={apiData["Selected-Stat"].map((v)=>{return v["value"]})} highLightValue={computedData["selectedValue"]} uxCallback={this.onUxEvent} />
-            </div>
-            <div>
-              <SimpleList renderData={apiData["Selected-Stat"]} columnList={["state", "value"]} uxCallback={this.onUxEvent} dataTag={""} />
-            </div>
-        </div>
-        }
+            }
+
+
+
+          <br/>
+          <p>Source: American Community Survrey (ACS) 2015. Religousity data is by Pew Research <a href="http://www.pewresearch.org/fact-tank/2016/02/29/how-religious-is-your-state/?state=alabama">link</a></p>
       </div>
-        <br/>
-        <p>Source: American Community Survrey (ACS) 2015. Religousity data is by Pew Research <a href="http://www.pewresearch.org/fact-tank/2016/02/29/how-religious-is-your-state/?state=alabama">link</a></p>
     </div>
 )
 }
