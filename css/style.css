@@ -1,0 +1,51 @@
+
+
+.radiobuttons {
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+
+.simple-list button{
+  margin-right: 1em;
+  margin-top: 0.7em;
+}
+.info-box{
+  height: 100px;
+  text-align: center;
+}
+.mapstates {
+  fill: #ccc;
+  stroke: #000;
+}
+
+.bar{
+  stroke: #000;
+  fill: #fff;
+}
+
+.highlight{
+  fill: #f00;
+}
+
+.list-sect{
+  height: 400px;
+  max-height: 400px;
+  overflow: scroll;
+}
+
+.histomap-sect{
+  min-height: 350px;
+}
+
+.fullw{
+  width: 100%
+}
+
+.fullh{
+  height: 400px;
+}
+
+select{
+  font-size: 1.2em;
+  border: dashed 1px black;
+}

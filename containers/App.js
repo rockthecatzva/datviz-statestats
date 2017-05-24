@@ -62,7 +62,7 @@ class App extends Component {
   }
 
   onClearSettings(){
-    console.log("body clicked- clear settings - - -  - -");
+    ///console.log("body clicked- clear settings - - -  - -");
     this.onUpdateComputedData({"selectedRange": null, "selectedValue": null, "mapMessage": ""});
 
   }
