@@ -67,6 +67,7 @@ export default class MapUSA extends Component {
           return color_scale(d['value']);
         })
         .on("click", function(e){
+          console.log(e);
           d3.event.stopPropagation();
           callUx("map-click", e);
         });
@@ -93,7 +94,7 @@ export default class MapUSA extends Component {
 
   render() {
     const {renderData} = this.props
-    //console.log(renderData);
+    console.log(renderData);
 
     return (
       <div className="fullw fullh">
