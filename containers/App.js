@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { fetchAPIData, updateSettings, updateComputedData, clearAPIData } from '../actions';
-import SimpleList from '../components/SimpleList';
+//import SimpleList from '../components/SimpleList';
 import Histogram from '../components/Histogram';
-import RadioButtons from '../components/RadioButtons';
+//import RadioButtons from '../components/RadioButtons';
 import MapUSA from '../components/MapUSA';
 import Dropdown from '../components/Dropdown'
 
@@ -88,7 +88,7 @@ class App extends Component {
       case "histogram-click":
         //tell the map to highlight certain states
         console.log(uxdat);
-        this.onUpdateComputedData({ "selectedRange": [uxdat["x0"], uxdat["x1"]], "selectedValue": null, "mapMessage": "State(s) with " + uxdat["x0"] + "-" + uxdat["x1"] + uxdat["numformat"] + ":" });
+        this.onUpdateComputedData({ "selectedRange": [uxdat["x0"], uxdat["x1"]], "selectedValue": uxdat[0], "mapMessage": "State(s) with " + uxdat["x0"] + "-" + uxdat["x1"] + uxdat["numformat"] + ":" });
         break;
     }
   }
@@ -135,39 +135,29 @@ class App extends Component {
       <div className="container" onClick={this.onClearSettings} >
 
         <div className="columns">
-          <div className="col-md-3 col-sm-hide"></div>
-          <div className="instructs col-md-6 col-sm-12">
+          <div className="instructs column col-6 centered">
             <h5>1. Click a demographic button below.</h5>
             <Dropdown uxTag={"StatSelected"} uxCallback={this.onUxEvent} renderData={radOptions} />
             <h1>{computedData["mapMessage"]} </h1>
           </div>
-          <div className="col-md-3 col-sm-hide"></div>
         </div>
 
         <div className="columns">
-          <div className="col-md-1 col-sm-hide"></div>
-          <div className="column col-md-6 col-sm-4">
+          <div className="column col-8">
             {(apiData["Selected-Stat"]) &&
               <MapUSA renderData={apiData["Selected-Stat"]} uxCallback={this.onUxEvent} highLightRange={computedData["selectedRange"]} />
             }
           </div>
 
-          <div className="column col-md-4 col-sm-12">
+          <div className="column col-3">
             {(apiData["Selected-Stat"]) &&
               <Histogram renderData={apiData["Selected-Stat"]} highLightValue={computedData["selectedValue"]} uxCallback={this.onUxEvent} />
             }
           </div>
-          <div className="col-md-1 col-sm-hide"></div>
-
-          
-
-    
 
         </div>
         <div className="columns">
-          <div className="col-md-3 col-sm-hide"></div>
-          <div className="col-md-6"><p>Source: American Community Survrey (ACS) 2015. Religousity data is by Pew Research <a href="http://www.pewresearch.org/fact-tank/2016/02/29/how-religious-is-your-state/?state=alabama">link</a></p></div>
-          <div className="col-md-3 col-sm-hide"></div>
+          <div className="column"><p>Source: American Community Survrey (ACS) 2015. Religousity data is by Pew Research <a href="http://www.pewresearch.org/fact-tank/2016/02/29/how-religious-is-your-state/?state=alabama">link</a></p></div>
         </div>
       </div>
     )

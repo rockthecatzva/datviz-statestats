@@ -23,7 +23,7 @@ export default class Dropdown extends Component {
       <div>
         <select onChange={onSelectItem} >
           {renderData.map((v,i)=>{
-            return(<option value={i}>{v["label"]}</option>)
+            return(<option key={i} value={i}>{v["label"]}</option>)
             })}
         </select>
 

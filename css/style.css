@@ -49,3 +49,12 @@ select{
   font-size: 1.2em;
   border: dashed 1px black;
 }
+
+.nopadmargin{
+  margin: 0px;
+  padding: 0px;
+}
+
+.greyed-out{
+  fill: #000;
+}

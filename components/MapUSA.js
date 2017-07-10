@@ -94,7 +94,7 @@ export default class MapUSA extends Component {
 
   render() {
     const {renderData} = this.props
-    console.log(renderData);
+    //console.log(renderData);
 
     return (
       <div className="fullw fullh">

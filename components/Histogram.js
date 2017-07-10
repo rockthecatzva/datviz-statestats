@@ -49,8 +49,13 @@ export default class Histogram extends Component {
       .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
 
     var callUx = function(tag, data){
+          //HIGHLIGHT CLICKED BAR??
+          //console.log(svg.selectAll(".bar-rect").attr("class"));
+          //svg.selectAll(".bar-rect").attr("class", "bar-rect greyed-out");
+          //console.log(svg.selectAll(".bar-rect").attr("class"));
+
           data = Object.assign({}, data, {"numformat": renderData[0]["numformat"]});
-          console.log(data)
+          
           uxCallback(tag, data)
         }
 
@@ -62,12 +67,14 @@ export default class Histogram extends Component {
         //console.log("Histo highlight? ", highlight, d.x0, d.x1, i, (i==bins.length-1 ? (d.x1)+1:d.x1));
         if(highlight){
           if(d.filter((v)=>{return v==highlight}).length){
-            return "highlight";
+            return "bar-rect highlight";
           }
         }
-        return "normal";
+        return "bar-rect normal";
         })
-      .on("click", (d,i)=>{callUx("histogram-click", d)});
+      .on("click", (d,i)=>{
+        console.log(d,i);
+        callUx("histogram-click", d)});
 
     bar.append("text")
       .attr("y", "-0.25em")
