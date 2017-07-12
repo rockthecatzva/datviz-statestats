@@ -1,9 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { fetchAPIData, updateSettings, updateComputedData, clearAPIData } from '../actions';
-//import SimpleList from '../components/SimpleList';
 import Histogram from '../components/Histogram';
-//import RadioButtons from '../components/RadioButtons';
 import MapUSA from '../components/MapUSA';
 import Dropdown from '../components/Dropdown'
 
@@ -76,6 +74,8 @@ class App extends Component {
 
   onUxEvent(tag, uxdat) {
     //PROCESS A UX EVENT - from a child component
+    const { apiData } = this.props;
+
     switch (tag) {
       case "StatSelected":
         this.onUpdateComputedData({ "selectedRange": null, "selectedValue": null, "selectedStatLabel": uxdat["label"], "mapMessage": "Click a state or histogram bar" });
@@ -83,12 +83,17 @@ class App extends Component {
         break;
       case "map-click":
         //tell the histogram to highlight XXXXXX
-        this.onUpdateComputedData({ "selectedValue": uxdat["value"], "selectedRange": null, "mapMessage": (uxdat["name"] + ": " + uxdat["value"] + uxdat["numformat"]) });
+        this.onUpdateComputedData({ "selectedValue": uxdat["value"], "selectedRange": null, "mapMessage": (uxdat["name"] + ": " + uxdat["value"] + uxdat["numformat"]), "highlightStates": [uxdat["name"]] });
         break;
       case "histogram-click":
         //tell the map to highlight certain states
-        console.log(uxdat);
-        this.onUpdateComputedData({ "selectedRange": [uxdat["x0"], uxdat["x1"]], "selectedValue": uxdat[0], "mapMessage": "State(s) with " + uxdat["x0"] + "-" + uxdat["x1"] + uxdat["numformat"] + ":" });
+      
+        let highlight = apiData["Selected-Stat"].filter(r=>
+        {if((r.value>=uxdat.x0)&&(r.value<uxdat.x1)) return true;
+          return false;
+        }).map(r=>{console.log(r.state); return r.state;});
+     console.log(highlight);
+        this.onUpdateComputedData({ "selectedRange": [uxdat["x0"], uxdat["x1"]], "selectedValue": uxdat[0], "mapMessage": "State(s) with " + uxdat["x0"] + "-" + uxdat["x1"] + uxdat["numformat"] + ":", "highlightStates": highlight });
         break;
     }
   }
@@ -131,6 +136,9 @@ class App extends Component {
       { "label": "% Trump", "apiObj": { "url": "http://rockthecatzva.com/dataviz-statestats/trump.json", "processor": (v, i) => { return { "id": parseInt(v["id"]), "state": v["state"], "value": parseInt(v["val"]), "numformat": "%" } } } },
     ];
 
+
+
+
     return (
       <div className="container" onClick={this.onClearSettings} >
 
@@ -145,7 +153,7 @@ class App extends Component {
         <div className="columns">
           <div className="column col-8">
             {(apiData["Selected-Stat"]) &&
-              <MapUSA renderData={apiData["Selected-Stat"]} uxCallback={this.onUxEvent} highLightRange={computedData["selectedRange"]} />
+              <MapUSA renderData={apiData["Selected-Stat"]} uxCallback={this.onUxEvent} highlightStates={computedData["highlightStates"]} />
             }
           </div>
 

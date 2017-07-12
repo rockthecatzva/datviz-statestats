@@ -9,9 +9,9 @@ export default class MapUSA extends Component {
     this.updateData = this.updateData.bind(this)
   }
 
-  updateData(data, highlightrange) {
+  updateData(data, highlight) {
     const {uxCallback} = this.props
-    //console.log(window.getComputedStyle(el).width);
+
     let el = ReactDOM.findDOMNode(this),
         containerW = parseInt((window.getComputedStyle(el).width).replace("px", "")),
         containerH = parseInt((window.getComputedStyle(el).height).replace("px", "")),
@@ -25,7 +25,7 @@ export default class MapUSA extends Component {
     d3.json("us.json", function(json) {
       var d = topojson.feature(json, json.objects.states)
       var t= d.features.map(function(val,i){
-        //should this be in the App.js - the component needs to be dumber???
+        
         for (var i = 0; i < data.length; i++) {
           if (data[i].id==val.id){
             return Object.assign({}, val, {"name": data[i].state}, data[i])
@@ -54,10 +54,9 @@ export default class MapUSA extends Component {
         .attr("d", path)
         .attr("class", "mapstates")
         .style('fill', function(d) {
-          if(highlightrange){
-            //console.log("should highlight? ", d.name, d.value, highlightrange[0], highlightrange[1]);
-            if(((d.value)>=(highlightrange[0]))&&((d.value)<highlightrange[1])){
-              //console.log("YEP HIGHLIGHTING");
+          if(highlight){
+            if(highlight.filter(r=>{if(r==d.state) return true; return false;}).length)
+            {
               return "#FF0"
             }
             else{
@@ -67,7 +66,6 @@ export default class MapUSA extends Component {
           return color_scale(d['value']);
         })
         .on("click", function(e){
-          console.log(e);
           d3.event.stopPropagation();
           callUx("map-click", e);
         });
@@ -75,9 +73,9 @@ export default class MapUSA extends Component {
   }
 
   componentWillReceiveProps(nextprop) {
+      console.log(nextprop.highlightStates)
       if(nextprop.renderData){
-        //console.log("sending this to the render func ",  nextprop.highLightRange);
-        this.updateData(nextprop.renderData, nextprop.highLightRange)
+        this.updateData(nextprop.renderData, nextprop.highlightStates)
       }
     }
 
@@ -87,14 +85,13 @@ export default class MapUSA extends Component {
     var svg = d3.select(el).append("svg")//add an empty svg
 
     if(this.props.renderData){
-        this.updateData(this.props.renderData, this.props.highLightRange)
+        this.updateData(this.props.renderData, this.props.highlightStates)
       }
   }
 
 
   render() {
     const {renderData} = this.props
-    //console.log(renderData);
 
     return (
       <div className="fullw fullh">
@@ -106,5 +103,5 @@ export default class MapUSA extends Component {
 MapUSA.propTypes = {
   renderData: PropTypes.array.isRequired,
   uxCallback: PropTypes.func.isRequired,
-  highLightRange: PropTypes.array.isRequired
+  highlightStates: PropTypes.array.isRequired
 }
