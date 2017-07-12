@@ -54,7 +54,7 @@ export default class MapUSA extends Component {
         .attr("d", path)
         .attr("class", "mapstates")
         .style('fill', function(d) {
-          if(highlight){
+          if(highlight.length){
             if(highlight.filter(r=>{if(r==d.state) return true; return false;}).length)
             {
               return "#FF0"

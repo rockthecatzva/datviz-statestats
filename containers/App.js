@@ -16,7 +16,7 @@ class App extends Component {
   }
 
   componentWillMount() {
-    this.onUpdateComputedData({ "selectedState": "No state selected", "selectedValue": null, "selectedRange": null, "selectedStatLabel": null })
+    this.onUpdateComputedData({ "selectedState": "No state selected", "selectedValue": null, "selectedRange": null, "selectedStatLabel": null, "highlightStates": [] })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -60,7 +60,7 @@ class App extends Component {
 
   onClearSettings() {
     ///console.log("body clicked- clear settings - - -  - -");
-    this.onUpdateComputedData({ "selectedRange": null, "selectedValue": null, "mapMessage": "" });
+    this.onUpdateComputedData({ "selectedValue": null, "mapMessage": "", "highlightStates": [] });
 
   }
 
