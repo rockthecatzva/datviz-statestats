@@ -1,4 +1,7 @@
-
+@font-face {
+    font-family: mainfont;
+    src: url('../fonts/GothamNarrow-Book.otf');
+}
 
 .radiobuttons {
   margin-right: 8px;
@@ -57,4 +60,24 @@ select{
 
 .greyed-out{
   fill: #000;
+}
+
+.instructs{
+  font-size: 1.2em;
+  text-align: center;
+}
+
+.map-message{
+  font-size: 2em;
+  text-align: center;
+  min-height: 2em;
+  text-decoration: underline;
+}
+
+.dropdown{
+  text-align: center;
+}
+
+body{
+  font-family: mainfont;
 }

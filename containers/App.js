@@ -59,7 +59,6 @@ class App extends Component {
   }
 
   onClearSettings() {
-    ///console.log("body clicked- clear settings - - -  - -");
     this.onUpdateComputedData({ "selectedValue": null, "mapMessage": "", "highlightStates": [] });
 
   }
@@ -87,12 +86,11 @@ class App extends Component {
         break;
       case "histogram-click":
         //tell the map to highlight certain states
-      
-        let highlight = apiData["Selected-Stat"].filter(r=>
-        {if((r.value>=uxdat.x0)&&(r.value<uxdat.x1)) return true;
+        let highlight = apiData["Selected-Stat"].filter(r => {
+          if ((r.value >= uxdat.x0) && (r.value < uxdat.x1)) return true;
           return false;
-        }).map(r=>{console.log(r.state); return r.state;});
-     console.log(highlight);
+        }).map(r => { return r.state; });
+
         this.onUpdateComputedData({ "selectedRange": [uxdat["x0"], uxdat["x1"]], "selectedValue": uxdat[0], "mapMessage": "State(s) with " + uxdat["x0"] + "-" + uxdat["x1"] + uxdat["numformat"] + ":", "highlightStates": highlight });
         break;
     }
@@ -137,16 +135,14 @@ class App extends Component {
     ];
 
 
-
-
     return (
       <div className="container" onClick={this.onClearSettings} >
 
         <div className="columns">
-          <div className="instructs column col-6 centered">
-            <h5>1. Click a demographic button below.</h5>
+          <div className="column col-6 col-sm-10 centered">
+            <span className="instructs centered">Select a demographic from the dropdown list:</span>
             <Dropdown uxTag={"StatSelected"} uxCallback={this.onUxEvent} renderData={radOptions} />
-            <h1>{computedData["mapMessage"]} </h1>
+            <span className="map-message centered">{computedData["mapMessage"]} </span>
           </div>
         </div>
 

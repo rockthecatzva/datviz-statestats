@@ -20,7 +20,7 @@ export default class Dropdown extends Component {
     }
 
     return (
-      <div>
+      <div className="dropdown centered">
         <select onChange={onSelectItem} >
           {renderData.map((v,i)=>{
             return(<option key={i} value={i}>{v["label"]}</option>)
