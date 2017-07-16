@@ -150,14 +150,14 @@ class App extends Component {
         </div>
 
         <div className="columns">
-          <div className="column col-8 col-sm-12">
+          <div className="column col-8 col-sm-12 histomap-sect">
             <div className="map-title">U.S. State Map</div>
             {(apiData["Selected-Stat"]) &&
               <MapUSA renderData={apiData["Selected-Stat"]} uxCallback={this.onUxEvent} highlightStates={computedData["highlightStates"]} />
             }
           </div>
           
-          <div className="column col-3 col-sm-12">
+          <div className="column col-3 col-sm-12 histomap-sect">
             <div className="histo-title">Distribution of Values</div>
             {(apiData["Selected-Stat"]) &&
             <div>

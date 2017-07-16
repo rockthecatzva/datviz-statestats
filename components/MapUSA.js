@@ -51,18 +51,22 @@ export default class MapUSA extends Component {
         .enter()
         .append("path")
         .attr("d", path)
-        .attr("class", "mapstates")
-        .style('fill', function(d) {
+        .attr("class", (d)=>{
           if(highlight.length){
             if(highlight.filter(r=>{if(r==d.state) return true; return false;}).length)
             {
-              return "#FF0"
+              return "mapstates highlight"
             }
             else{
-              return "#b2b4b7"
+              return "mapstates greyed-out"
             }
           }
-          return color_scale(d['value']);
+          return "mapstates";
+        })//make this dynamic and get rid of the fill below?
+        .style('fill', function(d) {
+          if(!highlight.length){
+            return color_scale(d['value']);  
+          }
         })
         .on("click", function(e){
           d3.event.stopPropagation();

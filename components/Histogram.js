@@ -64,6 +64,9 @@ export default class Histogram extends Component {
           if(d.filter((v)=>{return v==highlight}).length){
             return "bar-rect highlight";
           }
+          else{
+            return "bar-rect greyed-out";
+          }
         }
         return "bar-rect normal";
         })
