@@ -15,7 +15,7 @@ export default class MapUSA extends Component {
     let el = ReactDOM.findDOMNode(this),
         containerW = parseInt((window.getComputedStyle(el).width).replace("px", "")),
         containerH = parseInt((window.getComputedStyle(el).height).replace("px", "")),
-        projection = d3.geoAlbersUsa().scale(containerW+100).translate([containerW / 2, containerH / 2]),
+        projection = d3.geoAlbersUsa().scale(containerW+40).translate([containerW / 2, containerH / 2]),
         path = d3.geoPath().projection(projection);
 
     var svg = d3.select(ReactDOM.findDOMNode(this)).select("svg")
@@ -42,7 +42,6 @@ export default class MapUSA extends Component {
       var color_scale = d3.scaleLinear().domain([min_val, median_val, max_val]).range(['blue', 'white', 'red']);
 
       var callUx = function(tag, data){
-        console.log(data);
           uxCallback(tag, data)
         }
 

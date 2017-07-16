@@ -16,7 +16,7 @@ class App extends Component {
   }
 
   componentWillMount() {
-    this.onUpdateComputedData({ "selectedState": "No state selected", "selectedValue": null, "selectedRange": null, "selectedStatLabel": null, "highlightStates": [] })
+    this.onUpdateComputedData({ "selectedState": "No state selected", "selectedValue": null, "selectedStatLabel": null, "highlightStates": [] })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -51,7 +51,6 @@ class App extends Component {
   }
 
   onUpdateSettings(settings, tag) {
-    //let newsettings = Object.assign({}, this.props.apiSettings[tag], settings)
     let newsettings = settings//this means no more mixing - state is overwritten
     this.props.dispatch((dispatch) => {
       dispatch(updateSettings(newsettings, tag))
@@ -59,7 +58,7 @@ class App extends Component {
   }
 
   onClearSettings() {
-    this.onUpdateComputedData({ "selectedValue": null, "mapMessage": "", "highlightStates": [] });
+    this.onUpdateComputedData({ "selectedValue": null, "mapMessage": "Click a state or histogram bar", "highlightStates": [] });
 
   }
 
@@ -77,21 +76,25 @@ class App extends Component {
 
     switch (tag) {
       case "StatSelected":
-        this.onUpdateComputedData({ "selectedRange": null, "selectedValue": null, "selectedStatLabel": uxdat["label"], "mapMessage": "Click a state or histogram bar" });
+        this.onUpdateComputedData({ "selectedValue": null, "selectedStatLabel": uxdat["label"], "mapMessage": "Click a state or histogram bar", "numFormat": uxdat["numformat"] });
         this.onUpdateSettings(uxdat["apiObj"], "Selected-Stat");//this called last - it initiates the api call!
         break;
       case "map-click":
         //tell the histogram to highlight XXXXXX
-        this.onUpdateComputedData({ "selectedValue": uxdat["value"], "selectedRange": null, "mapMessage": (uxdat["name"] + ": " + uxdat["value"] + uxdat["numformat"]), "highlightStates": [uxdat["name"]] });
+        this.onUpdateComputedData({ "selectedValue": uxdat["value"], "mapMessage": (uxdat["name"] + ": " + uxdat["value"] + uxdat["numformat"]), "highlightStates": [uxdat["name"]], "numFormat": uxdat["numformat"] });
         break;
       case "histogram-click":
         //tell the map to highlight certain states
+      let highNums = Object.entries(uxdat).filter(r=>{
+        if((Number.isInteger(parseInt(r[0])))) return true;
+        return false;
+      }).map(r=>{return parseInt(r[1]);});
+
         let highlight = apiData["Selected-Stat"].filter(r => {
-          if ((r.value >= uxdat.x0) && (r.value < uxdat.x1)) return true;
-          return false;
+          return highNums.includes(r.value);
         }).map(r => { return r.state; });
 
-        this.onUpdateComputedData({ "selectedRange": [uxdat["x0"], uxdat["x1"]], "selectedValue": uxdat[0], "mapMessage": "State(s) with " + uxdat["x0"] + "-" + uxdat["x1"] + uxdat["numformat"] + ":", "highlightStates": highlight });
+        this.onUpdateComputedData({ "selectedValue": uxdat[0], "mapMessage": "State(s) with " + uxdat["x0"] + "-" + uxdat["x1"] + uxdat["numformat"] + ":", "highlightStates": highlight, "numFormat": uxdat["numformat"] });
         break;
     }
   }
@@ -142,21 +145,27 @@ class App extends Component {
           <div className="column col-6 col-sm-10 centered">
             <span className="instructs centered">Select a demographic from the dropdown list:</span>
             <Dropdown uxTag={"StatSelected"} uxCallback={this.onUxEvent} renderData={radOptions} />
-            <span className="map-message centered">{computedData["mapMessage"]} </span>
+            <span className="label map-message centered">{computedData["mapMessage"]} </span>
           </div>
         </div>
 
         <div className="columns">
-          <div className="column col-8">
+          <div className="column col-8 col-sm-12">
+            <div className="map-title">U.S. State Map</div>
             {(apiData["Selected-Stat"]) &&
               <MapUSA renderData={apiData["Selected-Stat"]} uxCallback={this.onUxEvent} highlightStates={computedData["highlightStates"]} />
             }
           </div>
-
-          <div className="column col-3">
+          
+          <div className="column col-3 col-sm-12">
+            <div className="histo-title">Distribution of Values</div>
             {(apiData["Selected-Stat"]) &&
+            <div>
               <Histogram renderData={apiData["Selected-Stat"]} highLightValue={computedData["selectedValue"]} uxCallback={this.onUxEvent} />
+              <div className="histo-axis-label">{apiData["Selected-Stat"][0]["numformat"]}</div>
+              </div>
             }
+            
           </div>
 
         </div>

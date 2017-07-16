@@ -30,12 +30,6 @@
   fill: #f00;
 }
 
-.list-sect{
-  height: 400px;
-  max-height: 400px;
-  overflow: scroll;
-}
-
 .histomap-sect{
   min-height: 350px;
 }
@@ -70,8 +64,10 @@ select{
 .map-message{
   font-size: 2em;
   text-align: center;
-  min-height: 2em;
-  text-decoration: underline;
+  padding: 6px;
+  background-color: #c5c5c5;
+  color: #000;
+  margin: 15px;
 }
 
 .dropdown{
@@ -80,4 +76,14 @@ select{
 
 body{
   font-family: mainfont;
+}
+
+.map-title, .histo-title{
+  text-align: center;
+  font-size: 1.3em;
+}
+
+.histo-axis-label{
+  text-align: center;
+  font-size: 0.9em;
 }
